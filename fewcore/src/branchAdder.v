@@ -1,4 +1,4 @@
-module branchAdder (pc, increment, out, clk);
+module branchAdder (clk, pc, increment, out);
 	parameter XLEN = 32;
 	
 	input clk;
@@ -7,7 +7,7 @@ module branchAdder (pc, increment, out, clk);
 	output reg [XLEN-1:0] out;
 	
 	always @(posedge clk) begin
-		out = pc + (increment<<1);
+		out <= pc + (increment<<1);
 	end
 	
 endmodule

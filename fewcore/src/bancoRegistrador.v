@@ -1,4 +1,4 @@
-module bancoRegistrador (RAddress1, RAddress2, dataWrite, RWhich, writeEnabled, R1, R2, clk);
+module bancoRegistrador (clk, RAddress1, RAddress2, dataWrite, RWhich, writeEnabled, R1, R2);
 	parameter XLEN=32;
 	parameter AMOUNT=16;
 	parameter ADDRESSLEN=4;

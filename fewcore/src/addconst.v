@@ -1,4 +1,4 @@
-module addconst (in, out, clk);
+module addconst (clk, in, out);
 	parameter XLEN = 32;
 	parameter CONST = 4;
 	
