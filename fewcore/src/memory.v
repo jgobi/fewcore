@@ -4,7 +4,7 @@ module ROM(clk, address, out);
 	parameter ADDRESSLEN = 10;
 	input  clk;
 	input  [(ADDRESSLEN - 1):0] address;
-	output [(XLEN - 1):0] out;
+	output reg [(XLEN - 1):0] out;
 	
 	reg [(XLEN - 1):0] mem [(TAM-1):0];	
 	

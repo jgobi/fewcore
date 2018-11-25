@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY bancoRegistrador
+set_global_assignment -name TOP_LEVEL_ENTITY main
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:41:23  OCTOBER 20, 2018"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
@@ -49,10 +49,10 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_global_assignment -name VERILOG_FILE src/alu.v
 set_global_assignment -name VERILOG_FILE src/memory.v
 set_global_assignment -name VERILOG_FILE src/decoder.v
 set_global_assignment -name VERILOG_FILE src/branchAdder.v
@@ -60,4 +60,46 @@ set_global_assignment -name VERILOG_FILE src/fewcore.v
 set_global_assignment -name VERILOG_FILE src/addconst.v
 set_global_assignment -name VERILOG_FILE src/bancoRegistrador.v
 set_global_assignment -name VERILOG_FILE src/fetch.v
-set_global_assignment -name VERILOG_FILE src/Verilog3.v
+set_location_assignment PIN_M23 -to clk
+set_global_assignment -name VERILOG_FILE src/main.v
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_Y23 -to in1[8]
+set_location_assignment PIN_Y24 -to in1[7]
+set_location_assignment PIN_AA22 -to in1[6]
+set_location_assignment PIN_AA23 -to in1[5]
+set_location_assignment PIN_AA24 -to in1[4]
+set_location_assignment PIN_AB23 -to in1[3]
+set_location_assignment PIN_AB24 -to in1[2]
+set_location_assignment PIN_AC24 -to in1[1]
+set_location_assignment PIN_AB25 -to in1[0]
+set_location_assignment PIN_AC25 -to in2[8]
+set_location_assignment PIN_AB26 -to in2[7]
+set_location_assignment PIN_AD26 -to in2[6]
+set_location_assignment PIN_AC26 -to in2[5]
+set_location_assignment PIN_AB27 -to in2[4]
+set_location_assignment PIN_AD27 -to in2[3]
+set_location_assignment PIN_AC27 -to in2[2]
+set_location_assignment PIN_AC28 -to in2[1]
+set_location_assignment PIN_AB28 -to in2[0]
+set_location_assignment PIN_H15 -to out[17]
+set_location_assignment PIN_G16 -to out[16]
+set_location_assignment PIN_G15 -to out[15]
+set_location_assignment PIN_F15 -to out[14]
+set_location_assignment PIN_H17 -to out[13]
+set_location_assignment PIN_J16 -to out[12]
+set_location_assignment PIN_H16 -to out[11]
+set_location_assignment PIN_J15 -to out[10]
+set_location_assignment PIN_G17 -to out[9]
+set_location_assignment PIN_J17 -to out[8]
+set_location_assignment PIN_H19 -to out[7]
+set_location_assignment PIN_J19 -to out[6]
+set_location_assignment PIN_E18 -to out[5]
+set_location_assignment PIN_F18 -to out[4]
+set_location_assignment PIN_F21 -to out[3]
+set_location_assignment PIN_E19 -to out[2]
+set_location_assignment PIN_F19 -to out[1]
+set_location_assignment PIN_G19 -to out[0]
+set_location_assignment PIN_E21 -to zero
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
