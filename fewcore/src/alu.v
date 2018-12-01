@@ -1,4 +1,4 @@
-module alu(clk,operation,rs1,rs2,imm,forward,need_forward,reset,rd,zero);
+module alu(clk,operation,rs1,rs2,imm,forward,need_forward,pc,reset,rd,zero);
 
 parameter XLEN = 32; 
 
@@ -9,6 +9,7 @@ input [XLEN-1:0] rs2;
 input [XLEN-1:0] imm;
 input [XLEN-1:0] forward;
 input [1:0] need_forward;
+	input [XLEN-1:0] pc; 
 input reset;
 
 output reg [XLEN-1:0] rd;
@@ -22,37 +23,37 @@ reg [XLEN-1:0] opr1;
     always @* begin
         case (operation[6:0])
 				7'b0110011,7'b1100011: begin //R, B
-															  case(need_forward)
-																	2'b00: begin //Sem encaminhamento
-																			opr2 = rs2;
-																			opr1 = rs1;
-																			end
-																	2'b01: begin //Encaminhamento para rs2
-																		   opr2 = forward;
-																			opr1 = rs1;
-																			 end
-																	2'b10: begin //Encaminhamento para rs1
-																			opr2 = rs2;
-																			opr1 = forward;
-																			end
-																	2'b11: begin //Encaminhamento para rs1 e rs2
-																			opr2 = forward;
-																			opr1 = forward;
-																			end
-																	endcase
-										     end
+								case(need_forward)
+									2'b00: begin //Sem encaminhamento
+											opr2 = rs2;
+											opr1 = rs1;
+											end
+									2'b01: begin //Encaminhamento para rs2
+									       	opr2 = forward;
+									       	opr1 = rs1;
+									      	 end
+									2'b10: begin //Encaminhamento para rs1
+									       	opr2 = rs2;
+										opr1 = forward;
+										end
+									2'b11: begin //Encaminhamento para rs1 e rs2
+										opr2 = forward;
+										opr1 = forward;
+										end
+								endcase
+							end
 											  
             7'b0010011,7'b0000011,7'b0100011,: begin //I, S
-																case(need_forward[1:1])
-																	1'b0: begin //Sem encaminhamento
-																			opr2 = imm;
-																			opr1 = rs1;
+								case(need_forward[1:1])
+									1'b0: begin //Sem encaminhamento
+										opr2 = imm;
+										opr1 = rs1;
+										end
+									2'b1: begin //Encaminhamento para rs1
+										opr2 = imm;
+										opr1 = forward;
 																			end
-																	2'b1: begin //Encaminhamento para rs1
-																			opr2 = imm;
-																			opr1 = forward;
-																			end
-																	endcase
+								endcase
                                                end
 															  
             default:            begin // NO TYPE
@@ -122,7 +123,13 @@ reg [XLEN-1:0] opr1;
             12'b101010110011,12'b011010010011:   begin //sra, srai
                                 rd = opr1 >>> opr2[4:0];
                                 end
-            default:           						 begin // Nao faz nada
+	    12'bxxxxx1101111,12'bxx0001100111:   begin //jumps
+                                rd = pc + 2'b100;
+                                end
+   	    12'bxxxxx0010111:  	begin //AUIPC
+                  		new_pc = pc + imm;
+                      		end
+            default:           	begin // Nao faz nada
                                 rd = 'bx;
                                 end
         endcase
