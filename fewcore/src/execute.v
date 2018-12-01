@@ -31,9 +31,6 @@ always @(posedge clk) begin
                   new_pc = rs1 + imm;
                   new_pc[0:0] = 1'b0;
                       end
-   12'bxxxxx0010111:  begin //AUIPC
-                  new_pc = pc + imm;
-                      end
     default:    begin
                   new_pc = pc + imm;
                 end
