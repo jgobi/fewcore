@@ -15,7 +15,7 @@ input reset;
 output reg [XLEN-1:0] rd;
 output reg zero;
 
-//COLOCAR AUIPC
+
 reg [XLEN-1:0] opr2;
 reg [XLEN-1:0] opr1;
 
