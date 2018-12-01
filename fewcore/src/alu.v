@@ -1,4 +1,4 @@
-module alu(clk,operation,rs1,rs2,imm,forward,need_forward,reset,rd,zero);
+module alu(clk,operation,rs1,rs2,imm,forward,need_forward,pc,reset,rd,zero);
 
 parameter XLEN = 32; 
 
@@ -9,6 +9,7 @@ input [XLEN-1:0] rs2;
 input [XLEN-1:0] imm;
 input [XLEN-1:0] forward;
 input [1:0] need_forward;
+	input [XLEN-1:0] pc; 
 input reset;
 
 output reg [XLEN-1:0] rd;
@@ -121,6 +122,9 @@ reg [XLEN-1:0] opr1;
                                 end
             12'b101010110011,12'b011010010011:   begin //sra, srai
                                 rd = opr1 >>> opr2[4:0];
+                                end
+	    12'bxxxxx1101111,12'bxx0001100111:   begin //jumps
+                                rd = pc + 2'b100;
                                 end
             default:           						 begin // Nao faz nada
                                 rd = 'bx;
