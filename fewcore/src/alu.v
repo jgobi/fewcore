@@ -126,7 +126,10 @@ reg [XLEN-1:0] opr1;
 	    12'bxxxxx1101111,12'bxx0001100111:   begin //jumps
                                 rd = pc + 2'b100;
                                 end
-            default:           						 begin // Nao faz nada
+   	    12'bxxxxx0010111:  	begin //AUIPC
+                  		new_pc = pc + imm;
+                      		end
+            default:           	begin // Nao faz nada
                                 rd = 'bx;
                                 end
         endcase
