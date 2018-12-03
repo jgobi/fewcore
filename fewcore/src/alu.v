@@ -127,8 +127,8 @@ reg [XLEN-1:0] opr1;
                                 rd = pc + 2'b100;
                                 end
    	    12'bxxxxx0010111:  	begin //AUIPC
-                  		new_pc = pc + imm;
-                      		end
+										rd = pc + imm;
+										end
             default:           	begin // Nao faz nada
                                 rd = 'bx;
                                 end
