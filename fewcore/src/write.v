@@ -4,7 +4,7 @@ module write(clk,writeEnabled,code,rd,dataAlu,memAddress,rdAddress,writeEnabled_
 	input [4:0] rd;
 	input [31:0] dataAlu;
 	
-	output [31:0] memAddress;
+	output reg [31:0] memAddress;
 
 	output reg writeEnabled_echo;
 	output reg [4:0] rdAddress;

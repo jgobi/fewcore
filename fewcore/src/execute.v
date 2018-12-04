@@ -24,13 +24,28 @@ output reg [4:0] address_rd;
 output reg [XLEN-1:0] content_rs2;
 
 
-reg zero;
+wire zero;
 
-reg [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
+wire [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
+
+wire [31:0] operando1, operando2;
+
+assign operando1 = rs1_fwd ? forward : rs1;
+assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? forward : rs2) : imm;
+
+alu alu_m(
+	.clk(clk),
+	.operation(operation),
+	.opr1(operando1),
+	.opr2(operando2),
+	.pc(pc),
+	.alu_out(resultALU),
+	.zero(zero)
+);
 
 always @(posedge clk) begin
-  case(operation)
-		12'bxx0001100111: begin //JALR
+  case(operation[9:0])
+		10'b0001100111: begin //JALR
 			new_pc = rs1 + imm;
 			new_pc[0:0] = 1'b0;
 		end
@@ -39,22 +54,6 @@ always @(posedge clk) begin
 		end
 	endcase
 end
-
-alu alu_m(
-	.clk(clk),
-	.operation(operation),
-	.rs1(rs1),
-	.rs2(rs2),
-	.imm(imm),
-	.forward(forward),
-	.need_forward({rs1_fwd,rs2_fwd}),
-	.pc(pc),
-	.reset(reset),
-	.alu_out(resultALU),
-	.zero(zero)
-);
-
-
 
 always @(~clk) begin
 	// load da memória
@@ -73,10 +72,6 @@ always @(~clk) begin
 		end
 		10'b1010000011: begin //LHU
 			execOut <= {{16{1'b0}}, memData[31:16]};
-		end
-
-		10'bxxx0100011: begin
-			execOut <= 32'b0;
 		end
 
 		default: // ALUIPC, LUI, instruções lógica-aritméticas

@@ -1,72 +1,20 @@
-module alu(clk,operation,rs1,rs2,imm,forward,need_forward,pc,reset,alu_out,zero);
+module alu(clk,operation,opr1,opr2,pc,alu_out,zero);
 
 parameter XLEN = 32;
 
 input clk;
 input [11:0] operation; //funct concatenado com opcode
-input [XLEN-1:0] rs1;
-input [XLEN-1:0] rs2;
-input [XLEN-1:0] imm;
-input [XLEN-1:0] forward;
-input [1:0] need_forward;
+input [XLEN-1:0] opr1;
+input [XLEN-1:0] opr2;
 input [XLEN-1:0] pc;
-input reset;
 
 output reg [XLEN-1:0] alu_out;
 output reg zero;
 
-
-reg [XLEN-1:0] opr2;
-reg [XLEN-1:0] opr1;
-
-
-	always @* begin
-		case (operation[6:0])
-			7'b0110011,7'b1100011: begin //R, B
-				case(need_forward)
-					2'b00: begin //Sem encaminhamento
-						opr2 = rs2;
-						opr1 = rs1;
-					end
-					2'b01: begin //Encaminhamento para rs2
-						opr2 = forward;
-						opr1 = rs1;
-					end
-					2'b10: begin //Encaminhamento para rs1
-						opr2 = rs2;
-						opr1 = forward;
-					end
-					2'b11: begin //Encaminhamento para rs1 e rs2
-						opr2 = forward;
-						opr1 = forward;
-					end
-				endcase
-			end
-
-			7'b0010011,7'b0000011,7'b0100011,: begin //I, S
-				case(need_forward[1:1])
-					1'b0: begin //Sem encaminhamento
-						opr2 = imm;
-						opr1 = rs1;
-					end
-					2'b1: begin //Encaminhamento para rs1
-						opr2 = imm;
-						opr1 = forward;
-					end
-				endcase
-			end
-
-			default: begin // NO TYPE
-				opr2 = 'bx;
-			end
-		endcase
-	end
-
-
 	always @(posedge clk)
 	 begin
 		case (operation)
-			12'b000000010011,12'b000000110011, 12'bxxxxx0000011,12'bxxxxx0100011:   begin // addi, add, load, stores
+			12'b000000010011,12'b000000110011, 12'bxxxxx0000011,12'bxxxxx0100011: begin // addi, add, load, stores
 				alu_out = opr1 + opr2;
 			end
 			12'b100000110011: begin //sub
@@ -113,7 +61,7 @@ reg [XLEN-1:0] opr1;
 			end
 			12'b001010110011,12'b001010010011: begin //srl, srli
 				alu_out = opr1 >> opr2[4:0];
-				end
+			end
 			12'b000010110011,12'b000010010011: begin //sll, slli
 				alu_out = opr1 << opr2[4:0];
 			end
@@ -123,8 +71,8 @@ reg [XLEN-1:0] opr1;
 			12'bxxxxx1101111,12'bxx0001100111: begin //jumps
 				alu_out = pc + 3'b100;
 			end
-			12'bxxxxx0010111: begin //AUIPC
-				alu_out = pc + imm;
+			12'b000000010111: begin //AUIPC
+				alu_out = pc + opr2;
 			end
 			default: begin // Nao faz nada
 				alu_out = 'bx;
