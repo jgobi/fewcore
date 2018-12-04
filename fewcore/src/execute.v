@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,forward,need_forward,pc,reset,new_pc,execOut,address_rd,content_rs2,originPc, memData);
+module execute(clk,operation,rs1,rs2,imm,rd,forward,rs1_fwd,rs2_fwd,pc,reset,new_pc,execOut,address_rd,content_rs2,originPc, memData);
 
 parameter  XLEN = 32;
 
@@ -9,7 +9,8 @@ input [XLEN-1:0] rs2;
 input [XLEN-1:0] imm;
 input [4:0] rd;
 input [XLEN-1:0] forward;
-input [1:0] need_forward;
+input  rs1_fwd;
+input  rs2_fwd;
 input [XLEN-1:0] pc;
 input reset;
 
@@ -46,7 +47,7 @@ alu alu_m(
 	.rs2(rs2),
 	.imm(imm),
 	.forward(forward),
-	.need_forward(need_forward),
+	.need_forward({rs1_fwd,rs2_fwd}),
 	.pc(pc),
 	.reset(reset),
 	.alu_out(resultALU),
