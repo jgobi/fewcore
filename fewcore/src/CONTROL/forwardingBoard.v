@@ -1,4 +1,4 @@
-module forwardingBoard(lastRd,rs1,rs2,encFB);
+module forwardingBoard(lastRd,rs1,rs2,encFB_1,encFB_2);
 	input [4:0] lastRd,rs1,rs2;
 	output encFB_1, encFB_2;
 	
