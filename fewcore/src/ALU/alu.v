@@ -14,7 +14,7 @@ output reg zero;
 	always @(posedge clk)
 	 begin
 		case (operation)
-			12'b000000010011,12'b000000110011, 12'bxxxxx0000011,12'bxxxxx0100011: begin // addi, add, load, stores
+			12'b000000010011,12'b000000110011, 12'b000000000011,12'b000010000011,12'b000100000011,12'b001000000011,12'b001010000011,12'b000000100011,12'b000010100011,12'b000100100011: begin // addi, add, load, stores
 				alu_out = opr1 + opr2;
 			end
 			12'b100000110011: begin //sub
@@ -68,11 +68,14 @@ output reg zero;
 			12'b101010110011,12'b011010010011: begin //sra, srai
 				alu_out = opr1 >>> opr2[4:0];
 			end
-			12'bxxxxx1101111,12'bxx0001100111: begin //jumps
+			12'b000001101111,12'b000001100111: begin //jumps
 				alu_out = pc + 3'b100;
 			end
 			12'b000000010111: begin //AUIPC
 				alu_out = pc + opr2;
+			end
+			12'b000000110111: begin //LUI
+				alu_out = opr2;
 			end
 			default: begin // Nao faz nada
 				alu_out = 'bx;
