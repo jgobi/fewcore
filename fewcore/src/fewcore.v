@@ -70,30 +70,53 @@ module fewcore (clk, reset);
 		.encSB(mini_scoreboard)
 	);
 
+
+	reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc, FB;
+
+	always @(posedge clk) begin
+		rs1_f_v    <= inst_rs1_f_v;
+		rs2_f_v    <= inst_rs2_f_v;
+		rd_f       <= inst_rd_f;
+		imm_f_v    <= inst_imm_f_v;
+		code_f     <= dec_code;
+		isLoad_f   <= isLoad;
+		isBranch_f <= isBranch;
+		old_pc_v   <= current_pc_v;
+		FB         <= mini_scoreboard;
+	end
+
+
 	execute execute_m(
 		.clk(clk),
 		.reset(reset),
-		.operation(dec_code),
-		.rs1(inst_rs1_f_v),
-		.rs2(inst_rs2_f_v),
-		.imm(inst_imm_f_v),
-		.rd(inst_rd_f),
-		.forward(forwarding),
-		.need_forward(mini_scoreboard),
-		.pc(current_pc_v),
+		.operation(code_f),
+		.rs1(rs1_f_v),
+		.rs2(rs2_f_v),
+		.imm(imm_f_v),
+		.need_forward(FB),
+		.pc(old_pc_v),
 		.new_pc(pcBranch),
 		.exec_out(exec_out),
-		.address_rd(inst_rd_e),
-		.content_rs2(inst_rs2_f_v),
 		.originPc(originPc)
 	);
 
+
+	reg [31:0] pcBranch_e, exec_out_e, rs2_e_v;
+	reg [4:0] rd_e;
+
+	always @(posedge clk) begin
+		rd_e       <= rd_f;
+		rs2_e_v    <= rs2_f_v;
+		pcBranch_e <= pcBranch;
+		exec_out_e <= exec_out;
+	end
+
+
 	write write_m(
 		.clk(clk),
-		.writeEnabled(clk),
-		.code(dec_code),
-		.rd(rd_w),
-		.dataAlu(exec_out),
+		.writeEnabled(clk), // TODO.
+		.rd(rd_e),
+		.dataAlu(exec_out_e),
 		.memAddress(mem_address_w),
 		.rdAddress(rd_w),
 		.dataOut(write_data)
