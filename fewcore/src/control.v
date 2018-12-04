@@ -23,7 +23,7 @@ forwardingBoard forwarding_board_m(
 	.lastRd(i_lastRD),
 	.rs1(curRS1),
 	.rs2(curRS2),
-	.encFB_1(i_FB_1)
+	.encFB_1(i_FB_1),
 	.encFB_2(i_FB_2)
 );
 
