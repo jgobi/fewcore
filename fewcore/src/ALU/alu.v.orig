@@ -126,9 +126,15 @@ reg [XLEN-1:0] opr1;
 				12'bxxxxx1101111,12'bxx0001100111:   begin //jumps
                                 alu_out = pc + 2'b100;
                                 end
+<<<<<<< HEAD
 				12'bxxxxx0010111:  	begin //AUIPC
 										  alu_out = pc + imm;
                       		end
+=======
+   	    12'bxxxxx0010111:  	begin //AUIPC
+										rd = pc + imm;
+										end
+>>>>>>> master
             default:           	begin // Nao faz nada
                                 alu_out = 'bx;
                                 end

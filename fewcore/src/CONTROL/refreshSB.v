@@ -8,11 +8,11 @@ module refreshSB(clk,lastRd,rs1,rs2,encSB);
 		end else begin
 			encSB[1] <= 1'b0;
 		end
-		
-		if(lastRd == rs2) begin 
+
+		if(lastRd == rs2) begin
 			encSB[0] <= 1'b1;
 		end else begin
 			encSB[0] <= 1'b0;
-		end	
+		end
 	end
-endmodule 
+endmodule

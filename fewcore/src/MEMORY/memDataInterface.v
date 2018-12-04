@@ -13,10 +13,10 @@ module memData_interface(clk, read_address, write_address, data_write, write_ena
 		.iWrite(write_enabled),
 		.out(data_out)
 	);
-	
+
 	always @(posedge clk)
 		memAddress <= write_address;
 	always @(negedge clk)
 		memAddress <= read_address;
-	
+
 endmodule

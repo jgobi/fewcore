@@ -27,31 +27,31 @@ reg [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
 
 always @(posedge clk) begin
   case(operation)
-    12'bxx0001100111: begin //JALR
-                  new_pc = rs1 + imm;
-                  new_pc[0:0] = 1'b0;
-                      end
-    default:    begin
-                  new_pc = pc + imm;
-                end
+	12'bxx0001100111: begin //JALR
+		new_pc = rs1 + imm;
+		new_pc[0:0] = 1'b0;
+	end
+	default: begin
+		new_pc = pc + imm;
+	end
 end
 
 alu alu_m(
-  .clk(clk),
-  .operation(operation),
-  .rs1(rs1),
-  .rs2(rs2),
-  .imm(imm),
-  .forward(forward),
-  .need_forward(need_forward),
-  .pc(pc),
-  .reset(reset),
-  .alu_out(resultALU),
-  .zero(zero)
-  );
+	.clk(clk),
+	.operation(operation),
+	.rs1(rs1),
+	.rs2(rs2),
+	.imm(imm),
+	.forward(forward),
+	.need_forward(need_forward),
+	.pc(pc),
+	.reset(reset),
+	.alu_out(resultALU),
+	.zero(zero)
+);
 
 
-  
+
 always ~clk begin
 	// load da memória
 	case(operation[9:0])
@@ -70,18 +70,15 @@ always ~clk begin
 		10'b1010000011: begin //LHU
 			execOut <= {{16{1'b0}}, data[31:16]};
 		end
-		
+
 		10'bxxx0100011: begin
 			execOut <= 32'b0;
 		end
-		
+
 		default: // ALUIPC, LUI, instruções lógica-aritméticas
 			execOut <= resultALU;
 	endcase
-	
+
 end
-
-
-
 
 endmodule
