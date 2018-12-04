@@ -120,49 +120,12 @@ module decoder(
 				end
 			end
 			7'b0110011: begin // arith and logic
-				if(({inst[31], inst[29:25]} == 6'b000000) || //add,sllst,sltu,xor,srl,or,and,sub,sra (inst[30] can be 1 or 0)
-				((inst[31:25] == 7'b0000001)&&(inst[14] == 1'b0)) // mul[h[u|su]] (do not support divs)
-				) begin
+				if({inst[31], inst[29:25]} == 6'b000000) begin //add,sllst,sltu,xor,srl,or,and,sub,sra
 					rs2i = inst[24:20];
 					rs1i = inst[19:15];
 					rdi  = inst[11:7];
 					imm = {32{1'b0}};
 					code = {inst[30],inst[25] ,inst[14:12] , inst[6:0]};
-
-					isBranch = 1'b0;
-					isLoad   = 1'b0;
-				end
-			end
-			7'b1110011: begin // ECALL, EBREAK
-				if(inst[14:12] == 3'b000) begin
-					// Quite the same as arith imm
-					rdi = inst[11:7];
-					rs1i = inst[19:15];        // WARN: This can be also zimm for CSRRX calls
-					rs2i = {5{1'b0}};
-					imm = {{20{1'b0}},inst[31:20]};
-					code = {2'b0000 ,inst[20] , inst[6:0]};
-
-					isBranch = 1'b0;
-					isLoad   = 1'b0;
-				end else if(inst[14:12] != 3'b100) begin // CSRRX
-					// Quite the same as arith imm
-					rdi = inst[11:7];
-					rs1i = inst[19:15];        // WARN: This can be also zimm for CSRRX calls
-					rs2i = {5{1'b0}};
-					imm = {{20{1'b0}},inst[31:20]};
-					code = {2'b00 ,inst[14:12] , inst[6:0]};
-
-					isBranch = 1'b0;
-					isLoad   = 1'b0;
-				end
-			end
-			7'b0011000: begin // IRQ
-				if (inst[14:12] != 3'b000) begin                    // IRQXX (NOT SBREAK)
-					imm = {{20{inst[31]}},inst[31:20]};
-					rdi = {inst[11:7]};
-					rs1i = {inst[19:15]};
-					rs2i = {inst[24:20]};
-					code = {{2{1'b0}} ,inst[14:12] , inst[6:0]};
 
 					isBranch = 1'b0;
 					isLoad   = 1'b0;

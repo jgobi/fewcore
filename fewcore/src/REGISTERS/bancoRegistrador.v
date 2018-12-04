@@ -11,7 +11,7 @@ module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2);
 
 	output reg [XLEN-1:0] r1, r2;
 
-	reg [XLEN-1:0] registers [AMOUNT-1:1];
+	reg [XLEN-1:0] registers [AMOUNT-1:0];
 
 	always @(posedge clk) begin
 		if (wEn) registers[rd] <= data;
