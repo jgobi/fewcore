@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,forward,need_forward,pc,reset,new_pc,execOut,address_rd,content_rs2,originPc);
+module execute(clk,operation,rs1,rs2,imm,rd,forward,need_forward,pc,reset,new_pc,execOut,address_rd,content_rs2,originPc, memData);
 
 parameter  XLEN = 32;
 
@@ -13,11 +13,13 @@ input [1:0] need_forward;
 input [XLEN-1:0] pc;
 input reset;
 
+input [31:0] memData;
+
 output reg [XLEN-1:0] new_pc; // Deve ser determinado antes do negedge
 output reg originPc; //Apenas setado apos o negedge
 
 output reg [XLEN-1:0] execOut;
-output reg [4:0] adress_rd;
+output reg [4:0] address_rd;
 output reg [XLEN-1:0] content_rs2;
 
 
@@ -27,13 +29,14 @@ reg [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
 
 always @(posedge clk) begin
   case(operation)
-	12'bxx0001100111: begin //JALR
-		new_pc = rs1 + imm;
-		new_pc[0:0] = 1'b0;
-	end
-	default: begin
-		new_pc = pc + imm;
-	end
+		12'bxx0001100111: begin //JALR
+			new_pc = rs1 + imm;
+			new_pc[0:0] = 1'b0;
+		end
+		default: begin
+			new_pc = pc + imm;
+		end
+	endcase
 end
 
 alu alu_m(
@@ -52,23 +55,23 @@ alu alu_m(
 
 
 
-always ~clk begin
+always @(~clk) begin
 	// load da memória
 	case(operation[9:0])
 		10'b0000000011: begin //LB
-			execOut <= {{24{data[31]}}, data[31:24]};
+			execOut <= {{24{memData[31]}}, memData[31:24]};
 		end
 		10'b0010000011: begin //LH
-			execOut <= {{16{data[31]}}, data[31:16]};
+			execOut <= {{16{memData[31]}}, memData[31:16]};
 		end
 		10'b0100000011: begin //LW
-			execOut <= data;
+			execOut <= memData;
 		end
 		10'b1000000011: begin //LBU
-			execOut <= {{24{1'b0}}, data[31:24]};
+			execOut <= {{24{1'b0}}, memData[31:24]};
 		end
 		10'b1010000011: begin //LHU
-			execOut <= {{16{1'b0}}, data[31:16]};
+			execOut <= {{16{1'b0}}, memData[31:16]};
 		end
 
 		10'bxxx0100011: begin

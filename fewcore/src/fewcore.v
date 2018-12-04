@@ -7,11 +7,11 @@ module fewcore (clk, reset);
 
 	// ====== CONTROLE
 	wire originPc, isLoad, isBranch, mem_write_enabled, banco_write_enabled;
-	wire [1:0] mini_scoreboard
+	wire [1:0] mini_scoreboard;
 	// ======= FIM CONTROLE
 
-	wire [4:0] inst_rd_f, inst_rd_e, inst_rs1, inst_rs2;
-	wire [31:0] inst_rs1_v, inst_rs2_v_f, inst_rs2_v_e, isnt_imm_v, current_pc_v;
+	wire [4:0] inst_rd_f, inst_rd_e, inst_rs1_f, inst_rs2_f;
+	wire [31:0] inst_rs1_f_v, inst_rs2_f_v, inst_rs2_e_v, inst_imm_f_v, current_pc_v;
 	wire [11:0] dec_code;
 
 	wire [31:0] rd_v_w;
@@ -20,12 +20,6 @@ module fewcore (clk, reset);
 	wire [31:0] forwarding;
 
 	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out;
-
-	control control_m(
-		.mem_write_enabled(mem_write_enabled),
-		.banco_write_enabled(banco_write_enabled),
-		.mini_scoreboard(mini_scoreboard),
-	);
 
 	memDataInterface memDataInterface_m(
 		.clk(clk),
@@ -39,13 +33,21 @@ module fewcore (clk, reset);
 	bancoRegistrador bancoRegistrador_m(
 		.clk(clk),
 		.reset(reset),
-		.rs1(inst_rs1)
-		.rs2(inst_rs2),
+		.rs1(inst_rs1_f),
+		.rs2(inst_rs2_f),
 		.data(write_data),
 		.rd(rd_w),
 		.wEn(banco_write_enabled),
-		.r1(inst_rs1_v),
-		.r2(inst_rs2_v_f)
+		.r1(inst_rs1_f_v),
+		.r2(inst_rs2_f_v)
+	);
+
+	control control_m(
+		.clk(clk),
+		.reset(reset),
+		.curRD(inst_rd_f),
+		.curRS1(inst_rs1_f),
+		.curRS2(inst_rs2_f)
 	);
 
 	fetch fetch_m(
@@ -55,12 +57,12 @@ module fewcore (clk, reset);
 		.pcBranch(pcBranch),
 		.originPc(originPc),
 		.lastRd(lastRd),
-		.rs1_v(inst_rs1_v),
-		.rs2_v(inst_rs2_v_f),
-		.rs1(inst_rs1),
-		.rs2(inst_rs2),
+		.rs1_v(inst_rs1_f_v),
+		.rs2_v(inst_rs2_f_v),
+		.rs1(inst_rs1_f),
+		.rs2(inst_rs2_f),
 		.rd(inst_rd_f),
-		.imm(inst_imm_v),
+		.imm(inst_imm_f_v),
 		.code(dec_code),
 		.isLoad(isLoad),
 		.isBranch(isBranch),
@@ -72,9 +74,9 @@ module fewcore (clk, reset);
 		.clk(clk),
 		.reset(reset),
 		.operation(dec_code),
-		.rs1(inst_rs1_v),
-		.rs2(inst_rs2_v_f),
-		.imm(inst_imm_v),
+		.rs1(inst_rs1_f_v),
+		.rs2(inst_rs2_f_v),
+		.imm(inst_imm_f_v),
 		.rd(inst_rd_f),
 		.forward(forwarding),
 		.need_forward(mini_scoreboard),
@@ -82,13 +84,13 @@ module fewcore (clk, reset);
 		.new_pc(pcBranch),
 		.exec_out(exec_out),
 		.address_rd(inst_rd_e),
-		.content_rs2(inst_rs2_v),
+		.content_rs2(inst_rs2_f_v),
 		.originPc(originPc)
 	);
 
 	write write_m(
 		.clk(clk),
-		.writeEnabled,
+		.writeEnabled(clk),
 		.code(dec_code),
 		.rd(rd_w),
 		.dataAlu(exec_out),

@@ -4,9 +4,9 @@ module write(clk,writeEnabled,code,rd,dataAlu,memAddress,rdAddress,writeEnabled_
 	input [4:0] rd;
 	input [31:0] dataAlu, memAddress;
 
-	output writeEnabled_echo;
-	output [4:0] rdAddress;
-	output [31:0] dataOut;
+	output reg writeEnabled_echo;
+	output reg [4:0] rdAddress;
+	output reg [31:0] dataOut;
 
 	// Execute dará os dados de SW,SH, SB e tds outros
 

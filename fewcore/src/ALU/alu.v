@@ -121,7 +121,7 @@ reg [XLEN-1:0] opr1;
 				alu_out = opr1 >>> opr2[4:0];
 			end
 			12'bxxxxx1101111,12'bxx0001100111: begin //jumps
-				alu_out = pc + 2'b100;
+				alu_out = pc + 3'b100;
 			end
 			12'bxxxxx0010111: begin //AUIPC
 				alu_out = pc + imm;

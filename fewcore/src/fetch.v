@@ -46,9 +46,9 @@ module fetch(
 	*/
 
 
-	// ================[ PRIMEIRA METADE DO CICLO ]================[
+	// ================[ PRIMEIRA METADE DO CICLO ]================ [SUBIDA DO CLOCK]
 
-	// ----------------[ FETCH DA INSTRUÇÃO ]----------------
+	// ----------------[ FETCH DA INSTRUÇÃO ]---------------- [SÍNCRONO]
 	memory mem(
 		.clk(clk),
 		.reset(reset),
@@ -56,10 +56,11 @@ module fetch(
 		.out(instr)
 	);
 
+	// ----------------[ DECODE DA INSTRUÇÃO ]---------------- [ASSÍNCRONO]
 	decoder dec(
 		.inst(instr),
-		.rs1i(_rs1),
-	  	.rs2i(_rs2),
+		.rs1i(rs1),
+	  	.rs2i(rs2),
 	  	.rdi(rd),
 		.imm(imm),
 		.code(code),
@@ -68,19 +69,16 @@ module fetch(
 		.isBranch(isBranch)
 	);
 
+
+
+
+
+// ================[ SEGUNDA METADE DO CICLO ]================ [DESCIDA DO CLOCK]
+
 	/*
 		***	OriginPc deve ser atualizado só depois da descida do clock	***
 		***       			A parte abaixo é negedge ou assincrona          ***
 	*/
-
-
-	refreshSB refreshSB(
-		.clk(clk),
-		.lastRd(lastRd),
-		.rs1(_rs1),
-		.rs2(_rs2),
-		.encSB(encSB)
-	);
 
 	newPc newPc(
 		.clk(clk),

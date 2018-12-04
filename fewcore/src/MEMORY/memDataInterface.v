@@ -1,7 +1,7 @@
 module memData_interface(clk, read_address, write_address, data_write, write_enabled, data_out);
 	parameter XLEN = 32;
 
-	input clk, writeEnable;
+	input clk, write_enabled;
 	input [XLEN-1:0] read_address, write_address, data_write;
 	output [XLEN-1:0] data_out;
 
