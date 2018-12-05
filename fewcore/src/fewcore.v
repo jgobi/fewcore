@@ -1,6 +1,6 @@
 module fewcore (reset);
 	input reset;
-	
+
 	wire clk;
 	clock clock_m(clk);
 
@@ -17,10 +17,22 @@ module fewcore (reset);
 	wire [4:0] inst_rd_f, inst_rd_e, inst_rs1_f, inst_rs2_f;
 	wire [31:0] inst_rs1_f_v, inst_rs2_f_v, inst_rs2_e_v, inst_imm_f_v, current_pc_v;
 	wire [11:0] dec_code;
-	
+
 	wire [31:0] forwarding;
 
 	wire [31:0] exec_out, mem_address_e, mem_address_w, reg_write_data, mem_write_data, mem_data_out;
+
+
+	reg [31:0] exec_out_e, rs2_e_v; //, pcBranch_e;
+	reg [4:0] rd_e;
+
+
+	//reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc_v, FB;
+	reg [31:0] rs1_f_v, rs2_f_v, imm_f_v, old_pc_v, FB;
+	reg [11:0] code_f;
+	reg [4:0] rd_f;
+	reg isLoad_f, isBranch_f, fwd_rs1_f, fwd_rs2_f, writeEnabled_f;
+
 
 	memData memData_m(
 		.clk(clk),
@@ -72,12 +84,6 @@ module fewcore (reset);
 	);
 
 
-	//reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc_v, FB;
-	reg [31:0] rs1_f_v, rs2_f_v, imm_f_v, old_pc_v, FB;
-	reg [11:0] code_f;
-	reg [4:0] rd_f;
-	reg isLoad_f, isBranch_f, fwd_rs1_f, fwd_rs2_f, writeEnabled_f;
-
 	always @(posedge clk) begin
 		rs1_f_v    <= inst_rs1_f_v;
 		rs2_f_v    <= inst_rs2_f_v;
@@ -113,23 +119,17 @@ module fewcore (reset);
 	);
 
 
-	reg [31:0] exec_out_e, rs2_e_v; //, pcBranch_e;
-	reg [4:0] rd_e;
-
 	always @(posedge clk) begin
 		banco_write_enabled <= writeEnabled_f;
 		mem_write_enabled <= writeEnabled_f & isStore;
 		rd_e       <= rd_f;
 		rs2_e_v    <= rs2_f_v;
-		//pcBranch_e <= pcBranch;
 		exec_out_e <= exec_out;
 	end
 
 
 	write write_m(
 		.clk(clk),
-		//.writeEnabled(writeEnabled_e),
-		.rd(rd_e),
 		.dataAlu(exec_out_e),
 		.rs2(rs2_e_v),
 		.memAddress(mem_address_w),

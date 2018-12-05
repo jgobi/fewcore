@@ -9,7 +9,7 @@ module memory(clk,reset,address,out);
 	reg [(XLEN - 1):0] mem [(TAM-1):0];
 	
 	always @(posedge clk) begin
-		if(reset) $readmemb("C:/Users/Elves/Desktop/fewcore/fewcore/src/MEMORY/data.txt", mem);
+		if(reset) $readmemb("src/MEMORY/data.txt", mem);
 		out <= mem[address[(ADDRESSLEN-1):2]];
 	end
 

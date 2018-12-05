@@ -1,6 +1,5 @@
-module write(clk,rd,dataAlu,rs2,memAddress,dataOut_m,dataOut_r);
+module write(clk,dataAlu,rs2,memAddress,dataOut_m,dataOut_r);
 	input clk;
-	input [4:0] rd;
 	input [31:0] dataAlu;
 	input [31:0] rs2;
 
