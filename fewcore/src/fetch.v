@@ -96,6 +96,7 @@ module fetch(
 	end
 	/*Temos que ter originPc setado antes da descida do clock*/
 	always @(negedge clk) begin
+		if(reset) pc = 32'b0;
 		pcOut = lastPc;
 		case(changePc)
 			1'b1: 
