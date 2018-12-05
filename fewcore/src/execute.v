@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData, resultALU);
+module execute(clk,operation,rs1,rs2,imm,rd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData, resultALU, isStore);
 
 parameter  XLEN = 32;
 
@@ -24,6 +24,7 @@ output reg [XLEN-1:0] execOut;
 output reg [4:0] address_rd, lastRd;
 output reg [XLEN-1:0] content_rs2;
 output [XLEN-1:0] resultALU;
+output reg isStore;
 
 
 wire zero;
@@ -86,6 +87,16 @@ always @(~clk) begin
 		default: // ALUIPC, LUI, instruções lógica-aritméticas
 			execOut <= resultALU;
 	endcase
+
+	case(operation[6:0])
+		7'b0100011: begin
+			isStore = 1'b1;
+		end
+		default: begin
+			isStore = 1'b0;
+		end
+	endcase
+
 
 end
 

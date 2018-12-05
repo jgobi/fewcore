@@ -6,19 +6,21 @@ module fewcore (clk,reset);
 	wire [31:0] pcBranch;
 
 	// ====== CONTROLE
-	wire originPc, isLoad, isBranch, mem_write_enabled, mem_read_enabled, banco_write_enabled,fwd_rs1,fwd_rs2;
+	wire originPc, isLoad, isBranch,  mem_read_enabled,fwd_rs1,fwd_rs2;
 	// ======= FIM CONTROLE
+
+	reg banco_write_enabled, mem_write_enabled;
 
 	wire [4:0] inst_rd_f, inst_rd_e, inst_rs1_f, inst_rs2_f;
 	wire [31:0] inst_rs1_f_v, inst_rs2_f_v, inst_rs2_e_v, inst_imm_f_v, current_pc_v;
 	wire [11:0] dec_code;
 
 	wire [31:0] rd_v_w;
-	wire [4:0] rd_w;
+	wire [4:0] rd_w, lastRd_e;
 
 	wire [31:0] forwarding;
 
-	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out, lastRd_v;
+	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out;
 
 	reg isLoad_f_to_mem;
 
@@ -39,10 +41,10 @@ module fewcore (clk,reset);
 	bancoRegistrador bancoRegistrador_m(
 		.clk(clk),
 		.reset(reset),
-		.rs1(inst_rs1_f),
-		.rs2(inst_rs2_f),
+		.rs1(inst_rs1_f[3:0]),
+		.rs2(inst_rs2_f[3:0]),
 		.data(write_data),
-		.rd(rd_w),
+		.rd(rd_w[3:0]),
 		.wEn(banco_write_enabled),
 		.r1(inst_rs1_f_v),
 		.r2(inst_rs2_f_v)
@@ -51,7 +53,7 @@ module fewcore (clk,reset);
 	control control_m(
 		.clk(clk),
 		.reset(reset),
-		.lastRD(lastRd_v),
+		.lastRD(lastRd_e),
 		.curRS1(inst_rs1_f),
 		.curRS2(inst_rs2_f),
 		.ALU_forwarding_RS1(fwd_rs1),
@@ -111,17 +113,18 @@ module fewcore (clk,reset);
 		.pc(old_pc_v),
 		.new_pc(pcBranch),
 		.execOut(exec_out),
-		.lastRd(lastRd_v),
-		.originPc(originPc)
+		.lastRd(lastRd_e),
+		.originPc(originPc),
+		.isStore(isStore)
 	);
 
 
 	reg [31:0] pcBranch_e, exec_out_e, rs2_e_v;
 	reg [4:0] rd_e;
-	reg writeEnabled_e;
 
 	always @(posedge clk) begin
-		writeEnabled_e <= writeEnabled_f;
+		banco_write_enabled <= writeEnabled_f;
+		mem_write_enabled <= writeEnabled_f & isStore;
 		rd_e       <= rd_f;
 		rs2_e_v    <= rs2_f_v;
 		pcBranch_e <= pcBranch;
@@ -131,7 +134,7 @@ module fewcore (clk,reset);
 
 	write write_m(
 		.clk(clk),
-		.writeEnabled(writeEnabled_e), // TODO.
+		//.writeEnabled(writeEnabled_e),
 		.rd(rd_e),
 		.dataAlu(exec_out_e),
 		.memAddress(mem_address_w),
