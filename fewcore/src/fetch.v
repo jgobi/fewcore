@@ -1,7 +1,7 @@
 module fetch(
 	clk,
 	reset,
-	pc,
+	//pc,
 	pcBranch,
 	originPc,
 	lastRd,
@@ -24,29 +24,29 @@ module fetch(
 	input [PCLEN-1:0] pcBranch;
 	input [4:0] lastRd;
 	input [XLEN-1:0] rs1_v, rs2_v;
-
-	inout [PCLEN-1:0] pc;
-
+	
 	output [XLEN-1:0] imm;
-	output [PCLEN-1:0] pcOut;
+	output reg [PCLEN-1:0] pcOut;
 	output [4:0] rd;
 	output [11:0] code;
-	
+
 	output isLoad, isBranch;
 
 	output [4:0] rs1, rs2;
 
+	reg [31:0] pc;
+
 	wire [XLEN-1:0] instr;
 
 	/*
-		*** lastRd deve ser atualizado por alguém necessariamente na subida de clock ***
+		*** lastRd deve ser atualizado por alguÃ©m necessariamente na subida de clock ***
 		*** 							originPc nca deve ser mudado								  ***
 	*/
 
 
 	// ================[ PRIMEIRA METADE DO CICLO ]================ [SUBIDA DO CLOCK]
 
-	// ----------------[ FETCH DA INSTRUÇÃO ]---------------- [SÍNCRONO]
+	// ----------------[ FETCH DA INSTRUÃ‡ÃƒO ]---------------- [SÃNCRONO]
 	memory mem(
 		.clk(clk),
 		.reset(reset),
@@ -54,7 +54,7 @@ module fetch(
 		.out(instr)
 	);
 
-	// ----------------[ DECODE DA INSTRUÇÃO ]---------------- [ASSÍNCRONO]
+	// ----------------[ DECODE DA INSTRUÃ‡ÃƒO ]---------------- [ASSÃNCRONO]
 	decoder dec(
 		.inst(instr),
 		.rs1i(rs1),
@@ -74,16 +74,38 @@ module fetch(
 // ================[ SEGUNDA METADE DO CICLO ]================ [DESCIDA DO CLOCK]
 
 	/*
-		***	OriginPc deve ser atualizado só depois da descida do clock	***
-		***       			A parte abaixo é negedge ou assincrona          ***
+		***	OriginPc deve ser atualizado sÃ³ depois da descida do clock	***
+		***       			A parte abaixo Ã© negedge ou assincrona          ***
 	*/
 
-	newPc newPc(
-		.clk(clk),
-		.pc(pc),
-		.pcBranch(pcBranch),
-		.originPc(originPc),
-		.pcOut(pcOut)
-	);
+	// newPc newPc(
+	// 	.clk(clk),
+	// 	.pc(pc),
+	// 	.pcBranch(pcBranch),
+	// 	.originPc(originPc),
+	// 	.pcOut(pcOut)
+	// );
 
+	
+	// -------------------- [ ATUALIZAR O PC ] --------------------
+	reg [31:0] pcPlus4, lastPc;
+	
+	always @(originPc) begin
+		case(originPc)
+			1'b1: 
+				pc <= pcBranch;
+			1'b0: 
+				pc <= pcPlus4;
+		endcase		
+	end
+
+	always @(posedge clk) begin
+		lastPc <= pc;
+	end
+
+	always @(negedge clk) begin
+		pcOut     <= lastPc;
+		pcPlus4   <= pc + 10'b100;
+	end
+	// -------------------- [ FIM DA ATUALIZAÃ‡ÃƒO PC ] --------------------
 endmodule

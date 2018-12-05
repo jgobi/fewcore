@@ -1,6 +1,6 @@
 module newPc(clk,pc,pcBranch,originPc,pcOut);
 	//nca mude originPc durante o clock alto
-	parameter PCLEN = 10;
+	parameter PCLEN = 32;
 
 	input clk,originPc;
 	input [PCLEN-1:0] pcBranch;

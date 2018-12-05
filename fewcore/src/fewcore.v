@@ -1,7 +1,7 @@
-module fewcore (clk, pc, reset);
+module fewcore (clk,reset);
 	input clk, reset;
 
-	inout [31:0] pc;
+	//inout [31:0] pc;
 	reg [4:0] lastRd;
 	wire [31:0] pcBranch;
 
@@ -19,7 +19,7 @@ module fewcore (clk, pc, reset);
 	wire [31:0] forwarding;
 
 	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out, lastRd_v;
-	
+
 	memData memData_m(
 		.clk(clk),
 		.writeAddress(mem_address_w),
@@ -54,7 +54,7 @@ module fewcore (clk, pc, reset);
 	fetch fetch_m(
 		.clk(clk),
 		.reset(reset),
-		.pc(pc),
+		//.pc(pc),
 		.pcBranch(pcBranch),
 		.originPc(originPc),
 		.lastRd(lastRd),
