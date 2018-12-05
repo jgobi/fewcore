@@ -4,9 +4,6 @@ module fetch(
 	//pc,
 	pcBranch,
 	originPc,
-	lastRd,
-	rs1_v,
-	rs2_v,
 	rd,
 	rs1,
 	rs2,
@@ -21,12 +18,9 @@ module fetch(
 	parameter ADDRESSLEN = 4;
 
 	input clk,reset,originPc;
-	input [PCLEN-1:0] pcBranch;
-	input [4:0] lastRd;
-	input [XLEN-1:0] rs1_v, rs2_v;
-	
+	input [31:0] pcBranch;
 	output [XLEN-1:0] imm;
-	output reg [PCLEN-1:0] pcOut;
+	output reg [31:0] pcOut;
 	output [4:0] rd;
 	output [11:0] code;
 
@@ -39,14 +33,14 @@ module fetch(
 	wire [XLEN-1:0] instr;
 
 	/*
-		*** lastRd deve ser atualizado por alguÃ©m necessariamente na subida de clock ***
+		*** lastRd deve ser atualizado por alguÃƒÆ’Ã‚Â©m necessariamente na subida de clock ***
 		*** 							originPc nca deve ser mudado								  ***
 	*/
 
 
 	// ================[ PRIMEIRA METADE DO CICLO ]================ [SUBIDA DO CLOCK]
 
-	// ----------------[ FETCH DA INSTRUÃ‡ÃƒO ]---------------- [SÃNCRONO]
+	// ----------------[ FETCH DA INSTRUÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O ]---------------- [SÃƒÆ’Ã‚ÂNCRONO]
 	memory mem(
 		.clk(clk),
 		.reset(reset),
@@ -54,7 +48,7 @@ module fetch(
 		.out(instr)
 	);
 
-	// ----------------[ DECODE DA INSTRUÃ‡ÃƒO ]---------------- [ASSÃNCRONO]
+	// ----------------[ DECODE DA INSTRUÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O ]---------------- [ASSÃƒÆ’Ã‚ÂNCRONO]
 	decoder dec(
 		.inst(instr),
 		.rs1i(rs1),
@@ -67,45 +61,22 @@ module fetch(
 		.isBranch(isBranch)
 	);
 
-
-
-
-
-// ================[ SEGUNDA METADE DO CICLO ]================ [DESCIDA DO CLOCK]
-
-	/*
-		***	OriginPc deve ser atualizado sÃ³ depois da descida do clock	***
-		***       			A parte abaixo Ã© negedge ou assincrona          ***
-	*/
-
-	// newPc newPc(
-	// 	.clk(clk),
-	// 	.pc(pc),
-	// 	.pcBranch(pcBranch),
-	// 	.originPc(originPc),
-	// 	.pcOut(pcOut)
-	// );
-
-	
 	// -------------------- [ ATUALIZAR O PC ] --------------------
-	reg [31:0] pcPlus4, lastPc;
+	reg [31:0] lastPc;
 	
-	always @(originPc) begin
-		case(originPc)
-			1'b1: 
-				pc <= pcBranch;
-			1'b0: 
-				pc <= pcPlus4;
-		endcase		
-	end
-
 	always @(posedge clk) begin
+		if(reset) pc <= 32'b0;
 		lastPc <= pc;
 	end
-
+	/*Temos que ter originPc setado antes da descida do clock*/
 	always @(negedge clk) begin
-		pcOut     <= lastPc;
-		pcPlus4   <= pc + 10'b100;
+		pcOut     = lastPc;
+		case(originPc)
+			1'b1: 
+				pc = pcBranch;
+			1'b0: 
+				pc = pc + 32'b100;
+		endcase
 	end
-	// -------------------- [ FIM DA ATUALIZAÃ‡ÃƒO PC ] --------------------
+	// -------------------- [ FIM DA ATUALIZAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O PC ] --------------------
 endmodule
