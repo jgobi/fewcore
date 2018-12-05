@@ -64,7 +64,7 @@ module fewcore (clk,reset);
 		.code(dec_code),
 		.isLoad(isLoad),
 		.isBranch(isBranch),
-		.pcOut(current_pc_v),
+		.pcOut(current_pc_v)
 	);
 
 
@@ -92,6 +92,7 @@ module fewcore (clk,reset);
 		.imm(imm_f_v),
 		.rs1_fwd(fwd_rs1),
 		.rs2_fwd(fwd_rs2),
+		.isBranch(isBranch_f),
 		.pc(old_pc_v),
 		.new_pc(pcBranch),
 		.execOut(exec_out),
@@ -122,4 +123,3 @@ module fewcore (clk,reset);
 	);
 
 endmodule
-

@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,forward,rs1_fwd,rs2_fwd,pc,reset,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData);
+module execute(clk,operation,rs1,rs2,imm,rd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData);
 
 parameter  XLEN = 32;
 
@@ -8,16 +8,17 @@ input [XLEN-1:0] rs1;
 input [XLEN-1:0] rs2;
 input [XLEN-1:0] imm;
 input [4:0] rd;
-input [XLEN-1:0] forward;
+//input [XLEN-1:0] forward;
 input rs1_fwd;
 input rs2_fwd;
 input [XLEN-1:0] pc;
 input reset;
+input isBranch;
 
 input [31:0] memData;
 
 output reg [XLEN-1:0] new_pc; // Deve ser determinado antes do negedge
-output reg originPc; //Apenas setado apos o negedge
+output originPc; //Deve ser passado antes do negedge
 
 output reg [XLEN-1:0] execOut;
 output reg [4:0] address_rd, lastRd;
@@ -30,8 +31,14 @@ wire [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
 
 wire [31:0] operando1, operando2;
 
-assign operando1 = rs1_fwd ? forward : rs1;
-assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? forward : rs2) : imm;
+
+assign originPc = isBranch & zero;
+
+//assign operando1 = rs1_fwd ? forward : rs1;
+//assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? forward : rs2) : imm;
+
+assign operando1 = rs1_fwd ? execOut : rs1;
+assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? execOut : rs2) : imm;
 
 alu alu_m(
 	.clk(clk),
