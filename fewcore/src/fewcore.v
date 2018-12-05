@@ -20,7 +20,7 @@ module fewcore (clk,reset);
 
 	wire [31:0] forwarding;
 
-	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out;
+	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data_r,write_data_m, mem_data_out;
 
 	reg isLoad_f_to_mem;
 
@@ -32,7 +32,7 @@ module fewcore (clk,reset);
 		.clk(clk),
 		.writeAddress(mem_address_w),
 		.readAddress(mem_address_e),
-		.data(write_data),
+		.data(write_data_m),
 		.writeEnabled(mem_write_enabled),
 		.readEnabled(isLoad_f_to_mem),
 		.out(mem_data_out)
@@ -43,7 +43,7 @@ module fewcore (clk,reset);
 		.reset(reset),
 		.rs1(inst_rs1_f[3:0]),
 		.rs2(inst_rs2_f[3:0]),
-		.data(write_data),
+		.data(write_data_r),
 		.rd(rd_w[3:0]),
 		.wEn(banco_write_enabled),
 		.r1(inst_rs1_f_v),
@@ -137,9 +137,11 @@ module fewcore (clk,reset);
 		//.writeEnabled(writeEnabled_e),
 		.rd(rd_e),
 		.dataAlu(exec_out_e),
+		.rs2(rs2_e_v),
 		.memAddress(mem_address_w),
 		.rdAddress(rd_w),
-		.dataOut(write_data)
+		.dataOut_r(write_data_r),
+		.dataOut_m(write_data_m)
 	);
 
 endmodule
