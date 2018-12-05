@@ -11,8 +11,8 @@ module fetch(
 	code,
 	isLoad,
 	isBranch,
+	writeEnabled,
 	pcOut,
-	writeEnabled
 );
 	parameter XLEN = 32;
 	parameter PCLEN = 10;
@@ -27,23 +27,23 @@ module fetch(
 
 	output isLoad, isBranch;
 
+	output [4:0] rs1, rs2;
 	output reg writeEnabled;
 
-	output [4:0] rs1, rs2;
 
 	reg [31:0] pc;
 
 	wire [XLEN-1:0] instr;
 
 	/*
-		*** lastRd deve ser atualizado por alguÃƒÆ’Ã‚Â©m necessariamente na subida de clock ***
+		*** lastRd deve ser atualizado por alguÃƒÂ©m necessariamente na subida de clock ***
 		*** 							originPc nca deve ser mudado								  ***
 	*/
 
 
 	// ================[ PRIMEIRA METADE DO CICLO ]================ [SUBIDA DO CLOCK]
 
-	// ----------------[ FETCH DA INSTRUÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O ]---------------- [SÃƒÆ’Ã‚ÂNCRONO]
+	// ----------------[ FETCH DA INSTRUÃƒâ€¡ÃƒÆ’O ]---------------- [SÃƒÂNCRONO]
 	memory mem(
 		.clk(clk),
 		.reset(reset),
@@ -51,7 +51,7 @@ module fetch(
 		.out(instr)
 	);
 
-	// ----------------[ DECODE DA INSTRUÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O ]---------------- [ASSÃƒÆ’Ã‚ÂNCRONO]
+	// ----------------[ DECODE DA INSTRUÃƒâ€¡ÃƒÆ’O ]---------------- [ASSÃƒÂNCRONO]
 	decoder dec(
 		.inst(instr),
 		.rs1i(rs1),
@@ -64,23 +64,48 @@ module fetch(
 		.isBranch(isBranch)
 	);
 
+
+
+
+
+// ================[ SEGUNDA METADE DO CICLO ]================ [DESCIDA DO CLOCK]
+
+	/*
+		***	OriginPc deve ser atualizado sÃƒÂ³ depois da descida do clock	***
+		***       			A parte abaixo ÃƒÂ© negedge ou assincrona          ***
+	*/
+
+	// newPc newPc(
+	// 	.clk(clk),
+	// 	.pc(pc),
+	// 	.pcBranch(pcBranch),
+	// 	.originPc(originPc),
+	// 	.pcOut(pcOut)
+	// );
+
+	
 	// -------------------- [ ATUALIZAR O PC ] --------------------
 	reg [31:0] lastPc;
-
+	wire changePc;
+	reg  lastOriginPc;
+	
+	assign changePc = lastOriginPc ? 32'b0: originPc;
+	
 	always @(posedge clk) begin
-		if(reset) pc <= 32'b0;
-		lastPc <= pc;
+		lastPc = pc;
 	end
 	/*Temos que ter originPc setado antes da descida do clock*/
 	always @(negedge clk) begin
-		pcOut     = lastPc;
-		case(originPc)
-			1'b1:
+		pcOut = lastPc;
+		case(changePc)
+			1'b1: 
 				pc = pcBranch;
-			1'b0:
+			1'b0: 
 				pc = pc + 32'b100;
 		endcase
-		writeEnabled <= ~originPc;
+		
+		writeEnabled  = ~originPc;
+		lastOriginPc = originPc;
 	end
-	// -------------------- [ FIM DA ATUALIZAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O PC ] --------------------
+	// -------------------- [ FIM DA ATUALIZAÃƒâ€¡ÃƒÆ’O PC ] --------------------
 endmodule
