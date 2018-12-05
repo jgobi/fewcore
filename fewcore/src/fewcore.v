@@ -19,14 +19,14 @@ module fewcore (clk, pc, reset);
 	wire [31:0] forwarding;
 
 	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out, lastRd_v;
-
-	memDataInterface memDataInterface_m(
+	
+	memData memData_m(
 		.clk(clk),
-		.read_address(mem_address_e),
-		.write_address(mem_address_w),
-		.data_write(write_data),
-		.write_enabled(mem_write_enabled),
-		.data_out(mem_data_out)
+		.writeAddress(mem_address_w),
+		.readAddress(mem_address_e),
+		.data(write_data),
+		.writeEnabled(mem_write_enabled),
+		.out(mem_data_out)
 	);
 
 	bancoRegistrador bancoRegistrador_m(

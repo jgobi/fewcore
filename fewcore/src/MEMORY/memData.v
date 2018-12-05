@@ -1,10 +1,10 @@
-module memData(clk,address,data,iWrite,out);
+module memData(clk,writeAddress,readAddress,data,writeEnabled,out);
 	parameter XLEN = 32;
 	parameter TAM = 16;
 	parameter ADDRESSLEN = 32;
 
-	input clk,iWrite;
-	input [(ADDRESSLEN - 1):0] address;
+	input clk,writeEnabled;
+	input [(ADDRESSLEN - 1):0] writeAddress,readAddress;
 	input [(XLEN-1):0] data;
 
 	output reg [(XLEN - 1):0] out;
@@ -12,12 +12,12 @@ module memData(clk,address,data,iWrite,out);
 	reg [(XLEN - 1):0] mem [(TAM-1):0];
 
 	always @(posedge clk) begin
-		if (iWrite)
-			mem[address[ADDRESSLEN-1:2]] <= data;
+		if (writeEnabled)
+			mem[writeAddress[ADDRESSLEN-1:2]] <= data;
 	end
 
 	always @(negedge clk) begin
-		out <= mem[address[ADDRESSLEN-1:2]];
+		out <= mem[readAddress[ADDRESSLEN-1:2]];
 	end
 
 endmodule
