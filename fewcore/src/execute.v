@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,forward,rs1_fwd,rs2_fwd,pc,reset,new_pc,execOut,address_rd,content_rs2,originPc, memData);
+module execute(clk,operation,rs1,rs2,imm,rd,forward,rs1_fwd,rs2_fwd,pc,reset,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData);
 
 parameter  XLEN = 32;
 
@@ -20,7 +20,7 @@ output reg [XLEN-1:0] new_pc; // Deve ser determinado antes do negedge
 output reg originPc; //Apenas setado apos o negedge
 
 output reg [XLEN-1:0] execOut;
-output reg [4:0] address_rd;
+output reg [4:0] address_rd, lastRd;
 output reg [XLEN-1:0] content_rs2;
 
 
@@ -44,7 +44,8 @@ alu alu_m(
 );
 
 always @(posedge clk) begin
-  case(operation[9:0])
+	lastRd <= rd;
+	case(operation[9:0])
 		10'b0001100111: begin //JALR
 			new_pc = rs1 + imm;
 			new_pc[0:0] = 1'b0;

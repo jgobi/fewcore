@@ -15,7 +15,6 @@ module fetch(
 	isLoad,
 	isBranch,
 	pcOut,
-	encSB
 );
 	parameter XLEN = 32;
 	parameter PCLEN = 10;
@@ -32,8 +31,7 @@ module fetch(
 	output [PCLEN-1:0] pcOut;
 	output [4:0] rd;
 	output [11:0] code;
-	output [1:0] encSB;
-
+	
 	output isLoad, isBranch;
 
 	output [4:0] rs1, rs2;

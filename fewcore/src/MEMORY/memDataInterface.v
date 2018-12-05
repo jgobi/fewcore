@@ -1,4 +1,4 @@
-module memData_interface(clk, read_address, write_address, data_write, write_enabled, data_out);
+module memDataInterface(clk, read_address, write_address, data_write, write_enabled, data_out);
 	parameter XLEN = 32;
 
 	input clk, write_enabled;
@@ -16,7 +16,7 @@ module memData_interface(clk, read_address, write_address, data_write, write_ena
 
 	always @(posedge clk)
 		memAddress <= write_address;
-	always @(negedge clk)
-		memAddress <= read_address;
+	//always @(negedge clk)
+		//memAddress <= read_address;
 
 endmodule

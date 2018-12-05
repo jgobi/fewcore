@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY execute
+set_global_assignment -name TOP_LEVEL_ENTITY fewcore
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:41:23  OCTOBER 20, 2018"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"

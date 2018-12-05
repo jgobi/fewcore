@@ -1,13 +1,12 @@
-module fewcore (clk, reset);
+module fewcore (clk, pc, reset);
 	input clk, reset;
 
-	reg [31:0] pc;
+	inout [31:0] pc;
 	reg [4:0] lastRd;
 	wire [31:0] pcBranch;
 
 	// ====== CONTROLE
-	wire originPc, isLoad, isBranch, mem_write_enabled, banco_write_enabled;
-	wire [1:0] mini_scoreboard;
+	wire originPc, isLoad, isBranch, mem_write_enabled, banco_write_enabled,fwd_rs1,fwd_rs2;
 	// ======= FIM CONTROLE
 
 	wire [4:0] inst_rd_f, inst_rd_e, inst_rs1_f, inst_rs2_f;
@@ -19,7 +18,7 @@ module fewcore (clk, reset);
 
 	wire [31:0] forwarding;
 
-	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out;
+	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out, lastRd_v;
 
 	memDataInterface memDataInterface_m(
 		.clk(clk),
@@ -45,9 +44,11 @@ module fewcore (clk, reset);
 	control control_m(
 		.clk(clk),
 		.reset(reset),
-		.curRD(inst_rd_f),
+		.lastRD(lastRd_v),
 		.curRS1(inst_rs1_f),
-		.curRS2(inst_rs2_f)
+		.curRS2(inst_rs2_f),
+		.ALU_forwarding_RS1(fwd_rs1),
+		.ALU_forwarding_RS2(fwd_rs2)
 	);
 
 	fetch fetch_m(
@@ -67,11 +68,10 @@ module fewcore (clk, reset);
 		.isLoad(isLoad),
 		.isBranch(isBranch),
 		.pcOut(current_pc_v),
-		.encSB(mini_scoreboard)
 	);
 
 
-	reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc, FB;
+	reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc_v, FB;
 
 	always @(posedge clk) begin
 		rs1_f_v    <= inst_rs1_f_v;
@@ -82,7 +82,7 @@ module fewcore (clk, reset);
 		isLoad_f   <= isLoad;
 		isBranch_f <= isBranch;
 		old_pc_v   <= current_pc_v;
-		FB         <= mini_scoreboard;
+		// FB         <= mini_scoreboard; // nao existe tu
 	end
 
 
@@ -93,10 +93,12 @@ module fewcore (clk, reset);
 		.rs1(rs1_f_v),
 		.rs2(rs2_f_v),
 		.imm(imm_f_v),
-		.need_forward(FB),
+		.rs1_fwd(fwd_rs1),
+		.rs2_fwd(fwd_rs2),
 		.pc(old_pc_v),
 		.new_pc(pcBranch),
-		.exec_out(exec_out),
+		.execOut(exec_out),
+		.lastRd(lastRd_v),
 		.originPc(originPc)
 	);
 
