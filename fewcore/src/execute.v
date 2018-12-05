@@ -9,8 +9,8 @@ input [XLEN-1:0] rs2;
 input [XLEN-1:0] imm;
 input [4:0] rd;
 input [XLEN-1:0] forward;
-input  rs1_fwd;
-input  rs2_fwd;
+input rs1_fwd;
+input rs2_fwd;
 input [XLEN-1:0] pc;
 input reset;
 

@@ -23,5 +23,4 @@ forwardingBoard forwarding_board_m(
 	.encFB_2(i_FB_2)
 );
 
-
 endmodule

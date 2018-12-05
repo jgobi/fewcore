@@ -2,7 +2,9 @@ module write(clk,writeEnabled,code,rd,dataAlu,memAddress,rdAddress,writeEnabled_
 	input clk, writeEnabled;
 	input [11:0] code;
 	input [4:0] rd;
-	input [31:0] dataAlu, memAddress;
+	input [31:0] dataAlu;
+	
+	output [31:0] memAddress;
 
 	output reg writeEnabled_echo;
 	output reg [4:0] rdAddress;
@@ -11,7 +13,8 @@ module write(clk,writeEnabled,code,rd,dataAlu,memAddress,rdAddress,writeEnabled_
 	// Execute dará os dados de SW,SH, SB e tds outros
 
 	always @(posedge clk) begin
-		rdAddress <= rd;
+		memAddress <= dataAlu;
+		rdAddress  <= rd;
 		writeEnabled_echo <= writeEnabled;
 		dataOut <= dataAlu;
 	end
