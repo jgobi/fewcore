@@ -83,30 +83,34 @@ module fetch(
 	// 	.pcOut(pcOut)
 	// );
 
-	
+
 	// -------------------- [ ATUALIZAR O PC ] --------------------
 	reg [31:0] lastPc;
 	wire changePc;
 	reg  lastOriginPc;
-	
+
 	assign changePc = lastOriginPc ? 32'b0: originPc;
-	
+
 	always @(posedge clk) begin
 		lastPc = pc;
 	end
 	/*Temos que ter originPc setado antes da descida do clock*/
 	always @(negedge clk) begin
-		if(reset) pc = 32'b0;
-		pcOut = lastPc;
-		case(changePc)
-			1'b1: 
-				pc = pcBranch;
-			1'b0: 
-				pc = pc + 32'b100;
-		endcase
-		
-		writeEnabled  = ~originPc;
-		lastOriginPc = originPc;
+		if(reset) begin
+			pc = 32'b0;
+		end
+		else begin
+			pcOut = lastPc;
+			case(changePc)
+				1'b1:
+					pc = pcBranch;
+				1'b0:
+					pc = pc + 32'b100;
+			endcase
+
+			writeEnabled  = ~originPc;
+			lastOriginPc = originPc;
+		end
 	end
 	// -------------------- [ FIM DA ATUALIZAÃƒâ€¡ÃƒÆ’O PC ] --------------------
 endmodule
