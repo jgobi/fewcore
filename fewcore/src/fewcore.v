@@ -6,7 +6,7 @@ module fewcore (clk,reset);
 	wire [31:0] pcBranch;
 
 	// ====== CONTROLE
-	wire originPc, isLoad, isBranch, mem_write_enabled, banco_write_enabled,fwd_rs1,fwd_rs2;
+	wire originPc, isLoad, isBranch, mem_write_enabled, mem_read_enabled, banco_write_enabled,fwd_rs1,fwd_rs2;
 	// ======= FIM CONTROLE
 
 	wire [4:0] inst_rd_f, inst_rd_e, inst_rs1_f, inst_rs2_f;
@@ -20,12 +20,19 @@ module fewcore (clk,reset);
 
 	wire [31:0] exec_out, mem_address_e, mem_address_w, write_data, mem_data_out, lastRd_v;
 
+	reg isLoad_f_to_mem;
+
+	always @(posedge clk) begin
+		isLoad_f_to_mem <= isLoad;
+	end
+
 	memData memData_m(
 		.clk(clk),
 		.writeAddress(mem_address_w),
 		.readAddress(mem_address_e),
 		.data(write_data),
 		.writeEnabled(mem_write_enabled),
+		.readEnabled(isLoad_f_to_mem),
 		.out(mem_data_out)
 	);
 
@@ -71,7 +78,11 @@ module fewcore (clk,reset);
 	);
 
 
-	reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc_v, FB;
+	//reg [31:0] rs1_f_v, rs2_f_v, rd_f, imm_f_v, code_f, isLoad_f, isBranch_f, old_pc_v, FB;
+	reg [31:0] rs1_f_v, rs2_f_v, imm_f_v, old_pc_v, FB;
+	reg [11:0] code_f;
+	reg [4:0] rd_f;
+	reg isLoad_f, isBranch_f;
 
 	always @(posedge clk) begin
 		rs1_f_v    <= inst_rs1_f_v;
@@ -89,6 +100,7 @@ module fewcore (clk,reset);
 	execute execute_m(
 		.clk(clk),
 		.reset(reset),
+		.memData(mem_data_out),
 		.operation(code_f),
 		.rs1(rs1_f_v),
 		.rs2(rs2_f_v),

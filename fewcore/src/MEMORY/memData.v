@@ -1,9 +1,9 @@
-module memData(clk,writeAddress,readAddress,data,writeEnabled,out);
+module memData(clk,writeAddress,readAddress,data,writeEnabled,readEnabled,out);
 	parameter XLEN = 32;
 	parameter TAM = 16;
 	parameter ADDRESSLEN = 32;
 
-	input clk,writeEnabled;
+	input clk,writeEnabled,readEnabled;
 	input [(ADDRESSLEN - 1):0] writeAddress,readAddress;
 	input [(XLEN-1):0] data;
 
@@ -17,7 +17,8 @@ module memData(clk,writeAddress,readAddress,data,writeEnabled,out);
 	end
 
 	always @(negedge clk) begin
-		out <= mem[readAddress[ADDRESSLEN-1:2]];
+		if (readEnabled)
+			out <= mem[readAddress[ADDRESSLEN-1:2]];
 	end
 
 endmodule
