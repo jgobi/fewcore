@@ -12,14 +12,12 @@ module memData(clk,address,data,iWrite,out);
 	reg [(XLEN - 1):0] mem [(TAM-1):0];	
 	
 	always @(posedge clk) begin
-		case(iWrite)
-			1'b1: begin
-				mem[address[ADDRESSLEN-1:2]] <= data;
-			end
-			1'b0: begin
-				out <= mem[address[ADDRESSLEN-1:2]];
-			end
-		endcase
+		if (iWrite)
+			mem[address[ADDRESSLEN-1:2]] <= data;
+	end
+	
+	always @(negedge clk) begin
+		out <= mem[address[ADDRESSLEN-1:2]];
 	end
 	
 endmodule

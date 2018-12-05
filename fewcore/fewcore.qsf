@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY memData
+set_global_assignment -name TOP_LEVEL_ENTITY write
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:41:23  OCTOBER 20, 2018"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
@@ -52,16 +52,7 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
-set_global_assignment -name VERILOG_FILE src/alu.v
-set_global_assignment -name VERILOG_FILE src/memory.v
-set_global_assignment -name VERILOG_FILE src/decoder.v
-set_global_assignment -name VERILOG_FILE src/branchAdder.v
-set_global_assignment -name VERILOG_FILE src/fewcore.v
-set_global_assignment -name VERILOG_FILE src/addconst.v
-set_global_assignment -name VERILOG_FILE src/bancoRegistrador.v
-set_global_assignment -name VERILOG_FILE src/fetch.v
 set_location_assignment PIN_M23 -to clk
-set_global_assignment -name VERILOG_FILE src/main.v
 set_location_assignment PIN_Y23 -to in1[8]
 set_location_assignment PIN_Y24 -to in1[7]
 set_location_assignment PIN_AA22 -to in1[6]
@@ -99,10 +90,19 @@ set_location_assignment PIN_E19 -to out[2]
 set_location_assignment PIN_F19 -to out[1]
 set_location_assignment PIN_G19 -to out[0]
 set_location_assignment PIN_E21 -to zero
-set_global_assignment -name VERILOG_FILE src/refreshSB.v
-set_global_assignment -name VERILOG_FILE src/newPc.v
-set_global_assignment -name VERILOG_FILE src/memData.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name VERILOG_FILE src/execute.v
+set_global_assignment -name VERILOG_FILE src/alu.v
+set_global_assignment -name VERILOG_FILE src/memory.v
+set_global_assignment -name VERILOG_FILE src/decoder.v
+set_global_assignment -name VERILOG_FILE src/fewcore.v
+set_global_assignment -name VERILOG_FILE src/bancoRegistrador.v
+set_global_assignment -name VERILOG_FILE src/fetch.v
+set_global_assignment -name VERILOG_FILE src/refreshSB.v
+set_global_assignment -name VERILOG_FILE src/newPc.v
+set_global_assignment -name VERILOG_FILE src/memData.v
+set_global_assignment -name VERILOG_FILE src/write.v
+set_global_assignment -name VERILOG_FILE src/memDataInterface.v

@@ -16,14 +16,13 @@ module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2);
 	always @(posedge clk) begin
 		if (wEn) registers[rd] <= data;
 	end
-	
 	always @(negedge clk) begin
 		if (rs1 == 0)
-			rs1 <= 'b0;
+			r1 <= 'b0;
 		else
 			r1 <= registers[rs1];
 		if (rs2 == 0)
-			rs2 <= 'b0;
+			r2 <= 'b0;
 		else
 			r2 <= registers[rs2];
 	end

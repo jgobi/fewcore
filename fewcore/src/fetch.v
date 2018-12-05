@@ -1,4 +1,4 @@
-module fetch(clk,reset,pc,pcBranch,originPc,lastRd,rd,rs1,rs2,imm,code,isLoad,isBranch,pcOut, encSB);
+module fetch(clk,reset,pc,pcBranch,originPc,lastRd,rs1_v, rs2_v, rd,rs1,rs2, imm,code,isLoad,isBranch,pcOut, encSB);
 	parameter XLEN = 32;
 	parameter PCLEN = 10;
 	parameter ADDRESSLEN = 4;
@@ -6,10 +6,11 @@ module fetch(clk,reset,pc,pcBranch,originPc,lastRd,rd,rs1,rs2,imm,code,isLoad,is
 	input clk,reset,originPc;
 	input [PCLEN-1:0] pcBranch;
 	input [4:0] lastRd;
+	input [XLEN-1:0] rs1_v, rs2_v;
 	
 	inout [PCLEN-1:0] pc;
 	
-	output [XLEN-1:0] imm, rs1, rs2;
+	output [XLEN-1:0] imm;
 	output [PCLEN-1:0] pcOut;
 	output [4:0] rd;
 	output [11:0] code;
@@ -17,8 +18,9 @@ module fetch(clk,reset,pc,pcBranch,originPc,lastRd,rd,rs1,rs2,imm,code,isLoad,is
 	
 	output isLoad, isBranch;
 	
+	output [4:0] rs1, rs2;
+	
 	wire [XLEN-1:0] instr;
-	wire [4:0] _rs1, _rs2;
 	
 	/*
 		*** lastRd deve ser atualizado por alguém necessariamente na subida de clock ***
@@ -51,17 +53,6 @@ module fetch(clk,reset,pc,pcBranch,originPc,lastRd,rd,rs1,rs2,imm,code,isLoad,is
 		***       			A parte abaixo é negedge ou assincrona          *** 
 	*/
 	
-	bancoRegistrador bancoRegistrador(
-		.clk(clk),
-		.reset(reset),
-		.rs1(_rs1),
-		.rs2(_rs2),
-		.data(32'b0),
-		.rd(rd),
-		.wEn(0),
-		.r1(rs1),
-		.r2(rs2)
-	);
 	
 	refreshSB refreshSB(
 		.clk(clk),

@@ -1,27 +1,19 @@
-module write(clk,writeEnable,code,rd,dataAlu,memAddress,rdAddress,dataOut);
-	input clk,writeEnable;
+module write(clk,writeEnabled,code,rd,dataAlu,memAddress,rdAddress,writeEnabled_echo,dataOut);
+	input clk, writeEnabled;
 	input [11:0] code;
 	input [4:0] rd;
-	input [31:0] dataAlu,memAddress;
+	input [31:0] dataAlu, memAddress;
 	
-	output [4:0] rdAddress;	
-	output reg [31:0] dataOut;
+	output writeEnabled_echo;
+	output [4:0] rdAddress;
+	output [31:0] dataOut;
 	
-	assign rdAddress = rd;
+	// Execute dará os dados de SW,SH, SB e tds outros
 	
-	clk,address,data,iWrite,out);
+	always @(posedge clk) begin
+		rdAddress <= rd;
+		writeEnabled_echo <= writeEnabled;
+		dataOut <= dataAlu;
+	end
 	
-	// Execute já devolve o valor pronto para ser gravado
-	
-	memData memData_m(
-		.clk(clk),
-		.address(memAddress),
-		.data(dataAlu),
-		.iWrite(writeEnable),
-		.out(dataOut)
-	);
-	
-	
-	
-		
 endmodule 
