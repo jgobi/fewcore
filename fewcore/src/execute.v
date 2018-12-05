@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,originPc, memData, resultALU, isStore);
+module execute(clk,operation,rs1,rs2,imm,fwd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,originPc, memData, resultALU, isStore);
 
 parameter  XLEN = 32;
 
@@ -6,7 +6,7 @@ input clk;
 input [11:0] operation; //funct concatenado com opcode
 input [XLEN-1:0] rs1;
 input [XLEN-1:0] rs2;
-input [XLEN-1:0] imm;
+input [XLEN-1:0] imm, fwd;
 //input [XLEN-1:0] forward;
 input rs1_fwd;
 input rs2_fwd;
@@ -36,8 +36,8 @@ assign originPc = isBranch & zero;
 //assign operando1 = rs1_fwd ? forward : rs1;
 //assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? forward : rs2) : imm;
 
-assign operando1 = rs1_fwd ? execOut : rs1;
-assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? execOut : rs2) : imm;
+assign operando1 = rs1_fwd ? fwd : rs1;
+assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? imm : (rs2_fwd ? fwd : rs2);
 
 alu alu_m(
 	.clk(clk),
