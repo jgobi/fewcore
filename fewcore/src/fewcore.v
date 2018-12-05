@@ -67,7 +67,7 @@ module fewcore (clk,reset);
 		.code(dec_code),
 		.isLoad(isLoad),
 		.isBranch(isBranch),
-		.pcOut(current_pc_v),
+		.pcOut(current_pc_v)
 	);
 
 
