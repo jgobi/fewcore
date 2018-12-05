@@ -70,6 +70,7 @@ output reg zero;
 			end
 			12'b000001101111,12'b000001100111: begin //jumps
 				alu_out = pc + 3'b100;
+				zero = 1'b1;
 			end
 			12'b000000010111: begin //AUIPC
 				alu_out = pc + opr2;
