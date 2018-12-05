@@ -49,7 +49,7 @@ alu alu_m(
 	.zero(zero)
 );
 
-always @(posedge clk) begin
+always @* begin
 	case(operation[9:0])
 		10'b0001100111: begin //JALR
 			new_pc = rs1 + imm;
@@ -61,7 +61,7 @@ always @(posedge clk) begin
 	endcase
 end
 
-always @(~clk) begin
+always @* begin
 	// load da memÃ³ria
 	case(operation[9:0])
 		10'b0000000011: begin //LB

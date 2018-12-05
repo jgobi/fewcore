@@ -13,7 +13,25 @@ module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2);
 
 	reg [XLEN-1:0] registers [AMOUNT-1:0];
 
-	always @(posedge clk) begin
+	always @* begin
+		if (reset) begin
+			registers[0] <= 0;
+			registers[1] <= 0;
+			registers[2] <= 0;
+			registers[3] <= 0;
+			registers[4] <= 0;
+			registers[5] <= 0;
+			registers[6] <= 0;
+			registers[7] <= 0;
+			registers[8] <= 0;
+			registers[9] <= 0;
+			registers[10] <= 0;
+			registers[11] <= 0;
+			registers[12] <= 0;
+			registers[13] <= 0;
+			registers[14] <= 0;
+			registers[15] <= 0;
+		end
 		if (wEn) registers[rd] <= data;
 	end
 	always @(negedge clk) begin

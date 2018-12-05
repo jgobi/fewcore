@@ -7,9 +7,9 @@ module write(clk,dataAlu,rs2,memAddress,dataOut_m,dataOut_r);
 
 	output reg [31:0] dataOut_r, dataOut_m;
 
-	// Execute dará os dados de SW,SH, SB e tds outros
+	// Execute dará os dados de SW, SH, SB e tds outros
 
-	always @(posedge clk) begin
+	always @* begin
 		memAddress <= dataAlu;
 		dataOut_r <= dataAlu;
 		dataOut_m <= rs2;

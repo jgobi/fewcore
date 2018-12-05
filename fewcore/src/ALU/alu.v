@@ -11,7 +11,7 @@ input [XLEN-1:0] pc;
 output reg [XLEN-1:0] alu_out;
 output reg zero;
 
-	always @(posedge clk)
+	always @*
 	 begin
 		case (operation)
 			12'b000000010011,12'b000000110011, 12'b000000000011,12'b000010000011,12'b000100000011,12'b001000000011,12'b001010000011,12'b000000100011,12'b000010100011,12'b000100100011: begin // addi, add, load, stores
@@ -79,7 +79,7 @@ output reg zero;
 				alu_out = opr2;
 			end
 			default: begin // Nao faz nada
-				alu_out = 'bx;
+				alu_out = 'b1;
 			end
 		endcase
 	end
