@@ -105,6 +105,7 @@ module fewcore (clk,reset);
 		.rs1_fwd(fwd_rs1),
 		.rs2_fwd(fwd_rs2),
 		.isBranch(isBranch_f),
+		.resultALU(mem_address_e),
 		.pc(old_pc_v),
 		.new_pc(pcBranch),
 		.execOut(exec_out),

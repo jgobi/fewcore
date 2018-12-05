@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData);
+module execute(clk,operation,rs1,rs2,imm,rd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,address_rd,content_rs2,lastRd,originPc, memData, resultALU);
 
 parameter  XLEN = 32;
 
@@ -23,11 +23,12 @@ output originPc; //Deve ser passado antes do negedge
 output reg [XLEN-1:0] execOut;
 output reg [4:0] address_rd, lastRd;
 output reg [XLEN-1:0] content_rs2;
+output [XLEN-1:0] resultALU;
 
 
 wire zero;
 
-wire [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
+//wire [XLEN-1:0] resultALU; //ALU sempre acaba em meio ciclo de clock
 
 wire [31:0] operando1, operando2;
 
