@@ -18,7 +18,7 @@ input isBranch;
 input [31:0] memData;
 
 output reg [XLEN-1:0] new_pc; // Deve ser determinado antes do negedge
-output reg originPc; //Deve ser passado antes do negedge
+output originPc; //Deve ser passado antes do negedge
 
 output reg [XLEN-1:0] execOut;
 output reg [4:0] address_rd, lastRd;
