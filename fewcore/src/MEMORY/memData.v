@@ -1,6 +1,6 @@
 module memData(clk,writeAddress,readAddress,data,writeEnabled,readEnabled,out);
 	parameter XLEN = 32;
-	parameter TAM = 16;
+	parameter TAM = 32;
 	parameter ADDRESSLEN = 32;
 
 	input clk,writeEnabled,readEnabled;

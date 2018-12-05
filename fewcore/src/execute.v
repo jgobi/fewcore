@@ -1,4 +1,4 @@
-module execute(clk,operation,rs1,rs2,imm,rd,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,address_rd,lastRd,originPc, memData, resultALU, isStore);
+module execute(clk,operation,rs1,rs2,imm,rs1_fwd,rs2_fwd,pc,reset,isBranch,new_pc,execOut,originPc, memData, resultALU, isStore);
 
 parameter  XLEN = 32;
 
@@ -7,7 +7,6 @@ input [11:0] operation; //funct concatenado com opcode
 input [XLEN-1:0] rs1;
 input [XLEN-1:0] rs2;
 input [XLEN-1:0] imm;
-input [4:0] rd;
 //input [XLEN-1:0] forward;
 input rs1_fwd;
 input rs2_fwd;
@@ -21,7 +20,6 @@ output reg [XLEN-1:0] new_pc; // Deve ser determinado antes do negedge
 output originPc; //Deve ser passado antes do negedge
 
 output reg [XLEN-1:0] execOut;
-output reg [4:0] address_rd, lastRd;
 output [XLEN-1:0] resultALU;
 output reg isStore;
 
@@ -52,7 +50,6 @@ alu alu_m(
 );
 
 always @(posedge clk) begin
-	lastRd <= rd;
 	case(operation[9:0])
 		10'b0001100111: begin //JALR
 			new_pc = rs1 + imm;
@@ -65,7 +62,7 @@ always @(posedge clk) begin
 end
 
 always @(~clk) begin
-	// load da memória
+	// load da memÃ³ria
 	case(operation[9:0])
 		10'b0000000011: begin //LB
 			execOut <= {{24{memData[31]}}, memData[31:24]};
@@ -83,7 +80,7 @@ always @(~clk) begin
 			execOut <= {{16{1'b0}}, memData[31:16]};
 		end
 
-		default: // ALUIPC, LUI, instruções lógica-aritméticas
+		default: // ALUIPC, LUI, instruÃ§Ãµes lÃ³gica-aritmÃ©ticas
 			execOut <= resultALU;
 	endcase
 

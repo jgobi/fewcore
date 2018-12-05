@@ -1,6 +1,6 @@
 module memory(clk,reset,address,out);
 	parameter XLEN = 32;
-	parameter TAM = 16;
+	parameter TAM = 32;
 	parameter ADDRESSLEN = 32;
 	input  clk,reset;
 	input  [(ADDRESSLEN - 1):0] address;

@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY execute
+set_global_assignment -name TOP_LEVEL_ENTITY fewcore
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:41:23  OCTOBER 20, 2018"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
@@ -90,12 +90,13 @@ set_location_assignment PIN_E19 -to out[2]
 set_location_assignment PIN_F19 -to out[1]
 set_location_assignment PIN_G19 -to out[0]
 set_location_assignment PIN_E21 -to zero
+set_global_assignment -name VERILOG_FILE src/fewcore.v
+set_global_assignment -name VERILOG_FILE src/clock.v
 set_global_assignment -name VERILOG_FILE src/CONTROL/forwardingBoard.v
 set_global_assignment -name VERILOG_FILE src/execute.v
 set_global_assignment -name VERILOG_FILE src/ALU/alu.v
 set_global_assignment -name VERILOG_FILE src/MEMORY/memory.v
 set_global_assignment -name VERILOG_FILE src/DECODER/decoder.v
-set_global_assignment -name VERILOG_FILE src/fewcore.v
 set_global_assignment -name VERILOG_FILE src/REGISTERS/bancoRegistrador.v
 set_global_assignment -name VERILOG_FILE src/fetch.v
 set_global_assignment -name VERILOG_FILE src/CONTROL/newPc.v

@@ -12,7 +12,7 @@ module fetch(
 	isLoad,
 	isBranch,
 	writeEnabled,
-	pcOut,
+	pcOut
 );
 	parameter XLEN = 32;
 	parameter PCLEN = 10;
@@ -89,7 +89,7 @@ module fetch(
 	wire changePc;
 	reg  lastOriginPc;
 
-	assign changePc = lastOriginPc ? 32'b0: originPc;
+	assign changePc = lastOriginPc ? 1'b0: originPc;
 
 	always @(posedge clk) begin
 		lastPc = pc;
