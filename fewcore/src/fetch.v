@@ -12,6 +12,7 @@ module fetch(
 	isLoad,
 	isBranch,
 	pcOut,
+	writeEnabled
 );
 	parameter XLEN = 32;
 	parameter PCLEN = 10;
@@ -25,6 +26,8 @@ module fetch(
 	output [11:0] code;
 
 	output isLoad, isBranch;
+
+	output reg writeEnabled;
 
 	output [4:0] rs1, rs2;
 
@@ -63,7 +66,7 @@ module fetch(
 
 	// -------------------- [ ATUALIZAR O PC ] --------------------
 	reg [31:0] lastPc;
-	
+
 	always @(posedge clk) begin
 		if(reset) pc <= 32'b0;
 		lastPc <= pc;
@@ -72,11 +75,12 @@ module fetch(
 	always @(negedge clk) begin
 		pcOut     = lastPc;
 		case(originPc)
-			1'b1: 
+			1'b1:
 				pc = pcBranch;
-			1'b0: 
+			1'b0:
 				pc = pc + 32'b100;
 		endcase
+		writeEnabled <= ~originPc;
 	end
 	// -------------------- [ FIM DA ATUALIZAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O PC ] --------------------
 endmodule

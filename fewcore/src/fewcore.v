@@ -71,7 +71,8 @@ module fewcore (clk,reset);
 		.code(dec_code),
 		.isLoad(isLoad),
 		.isBranch(isBranch),
-		.pcOut(current_pc_v)
+		.pcOut(current_pc_v),
+		.writeEnabled(writeEnabled_f)
 	);
 
 
@@ -79,7 +80,7 @@ module fewcore (clk,reset);
 	reg [31:0] rs1_f_v, rs2_f_v, imm_f_v, old_pc_v, FB;
 	reg [11:0] code_f;
 	reg [4:0] rd_f;
-	reg isLoad_f, isBranch_f;
+	reg isLoad_f, isBranch_f, fwd_rs1_r, fwd_rs2_r;
 
 	always @(posedge clk) begin
 		rs1_f_v    <= inst_rs1_f_v;
@@ -90,7 +91,8 @@ module fewcore (clk,reset);
 		isLoad_f   <= isLoad;
 		isBranch_f <= isBranch;
 		old_pc_v   <= current_pc_v;
-		// FB         <= mini_scoreboard; // nao existe tu
+		fwd_rs1_r  <= fwd_rs1;
+		fwd_rs2_r  <= fwd_rs2;
 	end
 
 
@@ -116,8 +118,10 @@ module fewcore (clk,reset);
 
 	reg [31:0] pcBranch_e, exec_out_e, rs2_e_v;
 	reg [4:0] rd_e;
+	reg writeEnabled_e;
 
 	always @(posedge clk) begin
+		writeEnabled_e <= writeEnabled_f;
 		rd_e       <= rd_f;
 		rs2_e_v    <= rs2_f_v;
 		pcBranch_e <= pcBranch;
@@ -127,7 +131,7 @@ module fewcore (clk,reset);
 
 	write write_m(
 		.clk(clk),
-		.writeEnabled(clk), // TODO.
+		.writeEnabled(writeEnabled_e), // TODO.
 		.rd(rd_e),
 		.dataAlu(exec_out_e),
 		.memAddress(mem_address_w),
