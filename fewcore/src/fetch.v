@@ -108,7 +108,7 @@ module fetch(
 					pc <= pc + 32'b100;
 			endcase
 
-			writeEnabled <= ~originPc;
+			writeEnabled <= ~changePc;
 			lastOriginPc <= originPc;
 		end
 	end

@@ -11,6 +11,7 @@ input [XLEN-1:0] pc;
 output reg [XLEN-1:0] alu_out;
 output reg zero;
 
+
 	always @*
 	 begin
 		case (operation)

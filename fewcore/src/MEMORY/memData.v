@@ -11,7 +11,7 @@ module memData(clk,writeAddress,readAddress,data,writeEnabled,readEnabled,out);
 
 	reg [(XLEN - 1):0] mem [(TAM-1):0];
 
-	always @(posedge clk) begin
+	always @(writeEnabled) begin
 		if (writeEnabled)
 			mem[writeAddress[ADDRESSLEN-1:2]] <= data;
 	end
