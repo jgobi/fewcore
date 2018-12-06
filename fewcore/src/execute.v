@@ -49,14 +49,16 @@ alu alu_m(
 	.zero(zero)
 );
 
+wire [XLEN-1:0] new_pc_intermediario;
+assign new_pc_intermediario = rs1 + imm;
+
 always @* begin
 	case(operation[9:0])
 		10'b0001100111: begin //JALR
-			new_pc = rs1 + imm;
-			new_pc[0:0] = 1'b0;
+			new_pc <= {new_pc_intermediario[31:1], 1'b0};
 		end
 		default: begin
-			new_pc = pc + imm;
+			new_pc <= pc + imm;
 		end
 	endcase
 end
@@ -86,10 +88,10 @@ always @* begin
 
 	case(operation[6:0])
 		7'b0100011: begin
-			isStore = 1'b1;
+			isStore <= 1'b1;
 		end
 		default: begin
-			isStore = 1'b0;
+			isStore <= 1'b0;
 		end
 	endcase
 

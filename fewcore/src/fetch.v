@@ -97,19 +97,19 @@ module fetch(
 	/*Temos que ter originPc setado antes da descida do clock*/
 	always @(negedge clk) begin
 		if(reset) begin
-			pc = 32'b0;
+			pc <= 32'b0;
 		end
 		else begin
-			pcOut = lastPc;
+			pcOut <= lastPc;
 			case(changePc)
 				1'b1:
-					pc = pcBranch;
+					pc <= pcBranch;
 				1'b0:
-					pc = pc + 32'b100;
+					pc <= pc + 32'b100;
 			endcase
 
-			writeEnabled  = ~originPc;
-			lastOriginPc = originPc;
+			writeEnabled <= ~originPc;
+			lastOriginPc <= originPc;
 		end
 	end
 	// -------------------- [ FIM DA ATUALIZAÃƒâ€¡ÃƒÆ’O PC ] --------------------

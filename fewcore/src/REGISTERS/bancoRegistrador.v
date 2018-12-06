@@ -1,7 +1,7 @@
 module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2);
 	parameter XLEN=32;
 	parameter AMOUNT=16;
-	parameter ADDRESSLEN=4;
+	parameter ADDRESSLEN=5;
 
 	input [ADDRESSLEN-1:0] rs1, rs2, rd;
 	input wEn, reset;
@@ -15,16 +15,16 @@ module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2);
 
 	always @* begin
 		if (reset) begin
-			registers[0] <= 0;
-			registers[1] <= 0;
-			registers[2] <= 0;
-			registers[3] <= 0;
-			registers[4] <= 0;
-			registers[5] <= 0;
-			registers[6] <= 0;
-			registers[7] <= 0;
-			registers[8] <= 0;
-			registers[9] <= 0;
+			registers[0]  <= 0;
+			registers[1]  <= 0;
+			registers[2]  <= 0;
+			registers[3]  <= 0;
+			registers[4]  <= 0;
+			registers[5]  <= 0;
+			registers[6]  <= 0;
+			registers[7]  <= 0;
+			registers[8]  <= 0;
+			registers[9]  <= 0;
 			registers[10] <= 0;
 			registers[11] <= 0;
 			registers[12] <= 0;
