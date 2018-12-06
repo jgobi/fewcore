@@ -115,6 +115,7 @@ module fewcore (clk, reset);
 		.rs1(rs1_f_v),
 		.rs2(rs2_f_v),
 		.imm(imm_f_v),
+		.fwd(exec_out_e),
 		.rs1_fwd(fwd_rs1_f),
 		.rs2_fwd(fwd_rs2_f),
 		.isBranch(isBranch_f),
