@@ -137,7 +137,7 @@ module fewcore (clk, reset);
 			banco_write_enabled <= writeEnabled_f;
 			mem_write_enabled   <= writeEnabled_f & isStore;
 			rd_e                <= rd_f;
-			rs2_e_v             <= rs2_f_v;
+			rs2_e_v             <= fwd_rs2_f ? exec_out_e : rs2_f_v;
 			exec_out_e          <= exec_out;
 		end
 	end
