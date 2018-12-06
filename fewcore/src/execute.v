@@ -50,7 +50,7 @@ alu alu_m(
 );
 
 wire [XLEN-1:0] new_pc_intermediario;
-assign new_pc_intermediario = rs1 + imm;
+assign new_pc_intermediario = operando1 + imm;
 
 always @* begin
 	case(operation[9:0])
