@@ -37,7 +37,7 @@ assign originPc = isBranch & zero;
 //assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? forward : rs2) : imm;
 
 assign operando1 = rs1_fwd ? fwd : rs1;
-assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? imm : (rs2_fwd ? fwd : rs2);
+assign operando2 = ((operation[6:0] == 7'b0110011 || operation[6:0] == 7'b1100011)) ? (rs2_fwd ? fwd : rs2) : imm;
 
 alu alu_m(
 	.clk(clk),
