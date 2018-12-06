@@ -52,7 +52,7 @@ module fewcore (clk, reset);
 	control control_m(
 		.clk(clk),
 		.reset(reset),
-		.lastRD(rd_e),
+		.lastRD(rd_f),
 		.curRS1(inst_rs1_f),
 		.curRS2(inst_rs2_f),
 		.ALU_forwarding_RS1(fwd_rs1),
