@@ -1,17 +1,21 @@
-module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2);
+module bancoRegistrador(clk,reset,rs1, rs2, data, rd, wEn, r1, r2, reg15);
 	parameter XLEN=32;
 	parameter AMOUNT=16;
 	parameter ADDRESSLEN=5;
+
+	input clk;
 
 	input [ADDRESSLEN-1:0] rs1, rs2, rd;
 	input wEn, reset;
 	input [XLEN-1:0] data;
 
-	input clk;
+	output [XLEN-1:0] reg15;
 
 	output reg [XLEN-1:0] r1, r2;
 
 	reg [XLEN-1:0] registers [AMOUNT-1:0];
+
+	assign reg15 = registers[15];
 
 	always @* begin
 		if (reset) begin

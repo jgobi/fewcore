@@ -1,6 +1,8 @@
-module fewcore (clk, reset);
-	input clk, reset;
+module fewcore (clk, reset, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7);
+	output [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7;
+	wire [31:0] register15;
 
+	input clk, reset;
 	wire [31:0] pcBranch;
 
 	// ====== CONTROLE
@@ -46,7 +48,8 @@ module fewcore (clk, reset);
 		.rd(rd_e),
 		.wEn(banco_write_enabled),
 		.r1(inst_rs1_f_v),
-		.r2(inst_rs2_f_v)
+		.r2(inst_rs2_f_v),
+		.reg15(register15)
 	);
 
 	control control_m(
@@ -143,4 +146,13 @@ module fewcore (clk, reset);
 	end
 
 	// O write está implícito aqui
+
+	hexDisplay hexDisplay0(.in(register15[3:0]  ), .out(HEX0));
+	hexDisplay hexDisplay1(.in(register15[7:4]  ), .out(HEX1));
+	hexDisplay hexDisplay2(.in(register15[11:8] ), .out(HEX2));
+	hexDisplay hexDisplay3(.in(register15[15:12]), .out(HEX3));
+	hexDisplay hexDisplay4(.in(register15[19:16]), .out(HEX4));
+	hexDisplay hexDisplay5(.in(register15[23:20]), .out(HEX5));
+	hexDisplay hexDisplay6(.in(register15[27:24]), .out(HEX6));
+	hexDisplay hexDisplay7(.in(register15[31:28]), .out(HEX7));
 endmodule
