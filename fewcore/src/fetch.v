@@ -1,7 +1,6 @@
 module fetch(
 	clk,
 	reset,
-	//pc,
 	pcBranch,
 	originPc,
 	rd,
